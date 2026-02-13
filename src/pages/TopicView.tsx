@@ -125,21 +125,22 @@ export default function TopicView() {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container py-8 space-y-8">
+      <main className="container py-4 sm:py-6 md:py-8 px-4 space-y-6 sm:space-y-8">
         {/* Header with Back Button */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
           <Button
             variant="outline"
             size="sm"
             onClick={() => navigate(`/category/${category}`)}
-            className="gap-2"
+            className="gap-2 w-fit"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to {categoryName}
+            <span className="hidden sm:inline">Back to {categoryName}</span>
+            <span className="sm:hidden">Back</span>
           </Button>
-          <div>
-            <h1 className="text-3xl font-bold">{categoryName} - {topicName}</h1>
-            <p className="text-muted-foreground">
+          <div className="flex-1">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">{categoryName} - {topicName}</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">
               {topicSubjects.length} classes available
             </p>
           </div>
@@ -154,12 +155,10 @@ export default function TopicView() {
 
         {/* Subjects */}
         <section>
-          <div className="flex flex-col gap-4 mb-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold">Browse Classes</h2>
-                <p className="text-muted-foreground">Choose a class to start learning</p>
-              </div>
+          <div className="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold">Browse Classes</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">Choose a class to start learning</p>
             </div>
             
             {/* Class Filter - only show if there are classes */}
@@ -184,14 +183,14 @@ export default function TopicView() {
           <section className="animate-fade-in" ref={videoSectionRef}>
             {selectedVideo ? (
               <>
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
                   <div>
-                    <h2 className="text-2xl font-bold">Now Watching</h2>
-                    <p className="text-muted-foreground">From {selectedSubject.name}</p>
+                    <h2 className="text-xl sm:text-2xl font-bold">Now Watching</h2>
+                    <p className="text-sm sm:text-base text-muted-foreground">From {selectedSubject.name}</p>
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
                   <div className="lg:col-span-2">
                     <VideoPlayer
                       video={selectedVideo}
@@ -211,10 +210,10 @@ export default function TopicView() {
                 </div>
               </>
             ) : (
-              <div className="text-center py-12 bg-muted/30 rounded-lg">
-                <BookOpen className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-xl font-semibold mb-2">No Videos Available</h3>
-                <p className="text-muted-foreground">Videos for {selectedSubject.name} will be added soon.</p>
+              <div className="text-center py-8 sm:py-12 bg-muted/30 rounded-lg">
+                <BookOpen className="h-12 w-12 sm:h-16 sm:w-16 mx-auto text-muted-foreground mb-3 sm:mb-4" />
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">No Videos Available</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">Videos for {selectedSubject.name} will be added soon.</p>
               </div>
             )}
           </section>

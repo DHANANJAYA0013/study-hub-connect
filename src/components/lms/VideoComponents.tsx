@@ -316,20 +316,22 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
   return (
     <Card className="overflow-hidden shadow-card">
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-xl">{video.title}</CardTitle>
-            {!isOnline && (
-              <Badge variant="secondary" className="gap-1">
-                <WifiOff className="h-3 w-3" />
-                Offline
-              </Badge>
-            )}
-            {isOfflineAvailable && (
-              <Badge variant="outline" className="border-green-500 text-green-600">
-                Downloaded
-              </Badge>
-            )}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+            <CardTitle className="text-lg sm:text-xl">{video.title}</CardTitle>
+            <div className="flex items-center gap-2">
+              {!isOnline && (
+                <Badge variant="secondary" className="gap-1 w-fit">
+                  <WifiOff className="h-3 w-3" />
+                  Offline
+                </Badge>
+              )}
+              {isOfflineAvailable && (
+                <Badge variant="outline" className="border-green-500 text-green-600 w-fit">
+                  Downloaded
+                </Badge>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-2">
             {role === "teacher" && (
@@ -342,19 +344,20 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
             {user && (
               <>
                 {downloadProgress.status === 'downloading' ? (
-                  <Button variant="outline" size="sm" disabled>
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    {downloadProgress.progress.toFixed(0)}%
+                  <Button variant="outline" size="sm" disabled className="text-xs sm:text-sm">
+                    <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">{downloadProgress.progress.toFixed(0)}%</span>
+                    <span className="sm:hidden">{downloadProgress.progress.toFixed(0)}%</span>
                   </Button>
                 ) : isOfflineAvailable ? (
                   <Button 
                     variant="outline" 
                     size="sm"
                     onClick={handleDeleteOffline}
-                    className="gap-2"
+                    className="gap-1 sm:gap-2 text-xs sm:text-sm"
                   >
-                    <Trash2 className="h-4 w-4" />
-                    Remove
+                    <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">Remove</span>
                   </Button>
                 ) : (
                   <Button 
@@ -362,10 +365,10 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
                     size="sm"
                     onClick={handleDownload}
                     disabled={!isOnline}
-                    className="gap-2"
+                    className="gap-1 sm:gap-2 text-xs sm:text-sm"
                   >
-                    <Download className="h-4 w-4" />
-                    Download
+                    <Download className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">Download</span>
                   </Button>
                 )}
               </>
@@ -404,9 +407,9 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
         </div>
         
         {/* Controls */}
-        <div className="p-4 bg-card border-t">
+        <div className="p-3 sm:p-4 bg-card border-t">
           {/* Progress Bar */}
-          <div className="mb-4">
+          <div className="mb-3 sm:mb-4">
             <Slider
               value={[currentTime]}
               max={duration || 100}
@@ -416,26 +419,26 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
             />
           </div>
           
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={togglePlay} className="h-9 w-9">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+            <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto">
+              <Button variant="ghost" size="icon" onClick={togglePlay} className="h-8 w-8 sm:h-9 sm:w-9">
                 {isPlaying ? (
-                  <Pause className="h-5 w-5" />
+                  <Pause className="h-4 w-4 sm:h-5 sm:w-5" />
                 ) : (
-                  <Play className="h-5 w-5" />
+                  <Play className="h-4 w-4 sm:h-5 sm:w-5" />
                 )}
               </Button>
               
-              <Button variant="ghost" size="icon" onClick={handleRestart} className="h-9 w-9">
-                <RotateCcw className="h-4 w-4" />
+              <Button variant="ghost" size="icon" onClick={handleRestart} className="h-8 w-8 sm:h-9 sm:w-9">
+                <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
               
-              <div className="flex items-center gap-2 w-32">
-                <Button variant="ghost" size="icon" onClick={toggleMute} className="h-9 w-9">
+              <div className="flex items-center gap-1 sm:gap-2 flex-1 sm:w-32">
+                <Button variant="ghost" size="icon" onClick={toggleMute} className="h-8 w-8 sm:h-9 sm:w-9">
                   {isMuted || volume === 0 ? (
-                    <VolumeX className="h-5 w-5" />
+                    <VolumeX className="h-4 w-4 sm:h-5 sm:w-5" />
                   ) : (
-                    <Volume2 className="h-5 w-5" />
+                    <Volume2 className="h-4 w-4 sm:h-5 sm:w-5" />
                   )}
                 </Button>
                 <Slider
@@ -443,23 +446,23 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
                   max={1}
                   step={0.1}
                   onValueChange={handleVolumeChange}
-                  className="w-20"
+                  className="w-12 sm:w-20"
                 />
               </div>
               
-              <span className="text-sm text-muted-foreground ml-2">
+              <span className="text-xs sm:text-sm text-muted-foreground ml-1 sm:ml-2">
                 {formatTime(currentTime)} / {formatTime(duration)}
               </span>
             </div>
             
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-between sm:justify-end">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">{progressPercentage.toFixed(0)}%</span>
-                <Progress value={progressPercentage} className="w-24 h-2" />
+                <span className="text-xs sm:text-sm font-medium">{progressPercentage.toFixed(0)}%</span>
+                <Progress value={progressPercentage} className="w-16 sm:w-24 h-2" />
               </div>
               
-              <Button variant="ghost" size="icon" onClick={handleFullscreen} className="h-9 w-9">
-                <Maximize className="h-4 w-4" />
+              <Button variant="ghost" size="icon" onClick={handleFullscreen} className="h-8 w-8 sm:h-9 sm:w-9">
+                <Maximize className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             </div>
           </div>
@@ -526,13 +529,13 @@ export const VideoStats = memo(function VideoStats({ subjects, progress }: Video
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       {stats.map((stat) => (
         <Card key={stat.title} className="relative overflow-hidden">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-2">
-              <div className={`p-2 rounded-lg ${stat.bgColor}`}>
-                <stat.icon className={`h-5 w-5 ${stat.color}`} />
+              <div className={`p-1.5 sm:p-2 rounded-lg ${stat.bgColor}`}>
+                <stat.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${stat.color}`} />
               </div>
               {stat.title === "Completed" && watchedVideos > 0 && (
                 <Badge variant="secondary" className="text-xs">
@@ -541,8 +544,8 @@ export const VideoStats = memo(function VideoStats({ subjects, progress }: Video
               )}
             </div>
             <div className="space-y-1">
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-sm text-muted-foreground">{stat.title}</p>
+              <p className="text-xl sm:text-2xl font-bold">{stat.value}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">{stat.title}</p>
             </div>
           </CardContent>
         </Card>

@@ -134,17 +134,17 @@ export default function Signup() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-muted/50 to-background">
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="text-center">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
             <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
             </Link>
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary">
-              <GraduationCap className="h-7 w-7 text-primary-foreground" />
+            <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-primary">
+              <GraduationCap className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
             </div>
-            <div className="w-5" />
+            <div className="w-4 sm:w-5" />
           </div>
-          <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-          <CardDescription>Join StudyHub and start learning today</CardDescription>
+          <CardTitle className="text-xl sm:text-2xl font-bold">Create Account</CardTitle>
+          <CardDescription className="text-sm sm:text-base">Join StudyHub and start learning today</CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -187,16 +187,16 @@ export default function Signup() {
 
             {/* ---------- ROLE SELECTION ---------- */}
             <div>
-              <Label className="mb-3 block">I am a...</Label>
+              <Label className="mb-2 sm:mb-3 block text-sm sm:text-base">I am a...</Label>
               <RadioGroup
                 value={role}
                 onValueChange={(v) => setRole(v as AppRole)}
-                className="grid grid-cols-2 gap-3"
+                className="grid grid-cols-2 gap-2 sm:gap-3"
               >
                 {/* Student */}
                 <Label
                   htmlFor="student"
-                  className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all
+                  className={`flex flex-col items-center gap-1.5 sm:gap-2 p-3 sm:p-4 rounded-xl border-2 cursor-pointer transition-all
                     ${
                       role === "student"
                         ? "border-primary bg-primary/10 text-primary"
@@ -205,17 +205,17 @@ export default function Signup() {
                 >
                   <RadioGroupItem value="student" id="student" className="sr-only" />
                   <UserCircle
-                    className={`h-6 w-6 ${
+                    className={`h-5 w-5 sm:h-6 sm:w-6 ${
                       role === "student" ? "text-primary" : "text-muted-foreground"
                     }`}
                   />
-                  <span className="font-medium">Student</span>
+                  <span className="font-medium text-sm sm:text-base">Student</span>
                 </Label>
 
                 {/* Teacher */}
                 <Label
                   htmlFor="teacher"
-                  className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all
+                  className={`flex flex-col items-center gap-1.5 sm:gap-2 p-3 sm:p-4 rounded-xl border-2 cursor-pointer transition-all
                     ${
                       role === "teacher"
                         ? "border-primary bg-primary/10 text-primary"
@@ -224,11 +224,11 @@ export default function Signup() {
                 >
                   <RadioGroupItem value="teacher" id="teacher" className="sr-only" />
                   <BookOpen
-                    className={`h-6 w-6 ${
+                    className={`h-5 w-5 sm:h-6 sm:w-6 ${
                       role === "teacher" ? "text-primary" : "text-muted-foreground"
                     }`}
                   />
-                  <span className="font-medium">Teacher</span>
+                  <span className="font-medium text-sm sm:text-base">Teacher</span>
                 </Label>
               </RadioGroup>
             </div>

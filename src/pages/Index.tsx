@@ -289,15 +289,15 @@ export default function Index() {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container py-8 space-y-8">
+      <main className="container py-4 sm:py-6 md:py-8 px-4 space-y-6 sm:space-y-8">
         {/* Hero Section */}
-        <section className="relative overflow-hidden rounded-2xl gradient-bg-hero p-8 md:p-12 text-white">
+        <section className="relative overflow-hidden rounded-xl sm:rounded-2xl gradient-bg-hero p-6 sm:p-8 md:p-12 text-white">
           <div className="absolute inset-0 bg-black/20" />
           <div className="relative z-10 max-w-2xl">
-            <h1 className="text-3xl md:text-4xl font-bold mb-3">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3">
               Welcome back{role === "teacher" ? ", Teacher" : ""}! 👋
             </h1>
-            <p className="text-lg text-white/90 mb-6">
+            <p className="text-base sm:text-lg text-white/90 mb-4 sm:mb-6">
               {role === "teacher" 
                 ? "Manage your courses and track student progress"
                 : "Choose a category to start your learning journey"}
@@ -311,9 +311,9 @@ export default function Index() {
 
         {/* Categories */}
         <section>
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-2">Learning Categories</h2>
-            <p className="text-muted-foreground">Select a category to explore topics and activities</p>
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-2">Learning Categories</h2>
+            <p className="text-sm sm:text-base text-muted-foreground">Select a category to explore topics and activities</p>
           </div>
           
           <CategoryGrid

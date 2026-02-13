@@ -97,13 +97,13 @@ export default function AdminLogin() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-muted/50 to-background">
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-destructive to-destructive/80">
-              <Shield className="h-7 w-7 text-destructive-foreground" />
+          <div className="flex justify-center mb-3 sm:mb-4">
+            <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-destructive to-destructive/80">
+              <Shield className="h-6 w-6 sm:h-7 sm:w-7 text-destructive-foreground" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold">Admin Portal</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-xl sm:text-2xl font-bold">Admin Portal</CardTitle>
+          <CardDescription className="text-sm sm:text-base">
             Sign in to access the admin dashboard
           </CardDescription>
         </CardHeader>

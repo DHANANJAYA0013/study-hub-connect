@@ -96,17 +96,17 @@ export default function Signin() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-muted/50 to-background">
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="text-center">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
             <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
             </Link>
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary">
-              <GraduationCap className="h-7 w-7 text-primary-foreground" />
+            <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-primary">
+              <GraduationCap className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
             </div>
-            <div className="w-5" />
+            <div className="w-4 sm:w-5" />
           </div>
-          <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
-          <CardDescription>Sign in to continue your learning journey</CardDescription>
+          <CardTitle className="text-xl sm:text-2xl font-bold">Welcome Back</CardTitle>
+          <CardDescription className="text-sm sm:text-base">Sign in to continue your learning journey</CardDescription>
         </CardHeader>
 
         <CardContent>

@@ -87,21 +87,22 @@ export default function CategoryView() {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container py-8 space-y-8">
+      <main className="container py-4 sm:py-6 md:py-8 px-4 space-y-6 sm:space-y-8">
         {/* Header with Back Button */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
           <Button
             variant="outline"
             size="sm"
             onClick={() => navigate("/")}
-            className="gap-2"
+            className="gap-2 w-fit"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Categories
+            <span className="hidden sm:inline">Back to Categories</span>
+            <span className="sm:hidden">Back</span>
           </Button>
-          <div>
-            <h1 className="text-3xl font-bold">{categoryName}</h1>
-            <p className="text-muted-foreground">
+          <div className="flex-1">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">{categoryName}</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">
               {topics.length} topics available
             </p>
           </div>
@@ -109,12 +110,12 @@ export default function CategoryView() {
 
         {/* Topics */}
         <section>
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-2">Browse Topics</h2>
-            <p className="text-muted-foreground">Choose a topic to explore activities and classes</p>
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-2">Browse Topics</h2>
+            <p className="text-sm sm:text-base text-muted-foreground">Choose a topic to explore activities and classes</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {topics.map((topic) => (
               <TopicCard
                 key={topic.name}

@@ -27,32 +27,33 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-card/80 backdrop-blur-xl">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl gradient-bg-primary shadow-primary">
-            <GraduationCap className="h-5 w-5 text-primary-foreground" />
+      <div className="container flex h-14 sm:h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg sm:rounded-xl gradient-bg-primary shadow-primary">
+            <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg font-bold tracking-tight">StudyHub</span>
-            <span className="text-xs text-muted-foreground">Learning Management System</span>
+            <span className="text-base sm:text-lg font-bold tracking-tight">StudyHub</span>
+            <span className="hidden sm:block text-xs text-muted-foreground">Learning Management System</span>
           </div>
         </div>
 
         {user && (
-          <div className="flex items-center gap-4">
-            <Badge variant={getRoleBadgeVariant(role)} className="capitalize">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <Badge variant={getRoleBadgeVariant(role)} className="capitalize text-xs sm:text-sm">
               {role || "User"}
             </Badge>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                  <Avatar className="h-10 w-10 border-2 border-primary/20">
+                <Button variant="ghost" className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-full">
+                  <Avatar className="h-8 w-8 sm:h-10 sm:w-10 border-2 border-primary/20">
                     <AvatarFallback
                       className="
                                 bg-primary/10
                                 text-primary
                                 font-semibold
+                                text-xs sm:text-sm
                                 hover:text-black
                                 focus:text-black
                                 active:text-black

@@ -12,19 +12,20 @@ interface SectionFilterProps {
 export const SectionFilter = memo(function SectionFilter({ selectedSection, onSelectSection, sectionCounts }: SectionFilterProps) {
   return (
     <div className="flex flex-wrap gap-2 items-center">
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Layers className="h-4 w-4" />
-        <span className="font-medium">Filter by Section:</span>
+      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground">
+        <Layers className="h-3 w-3 sm:h-4 sm:w-4" />
+        <span className="font-medium hidden sm:inline">Filter by Section:</span>
+        <span className="font-medium sm:hidden">Section:</span>
       </div>
       
       <Button
         variant={selectedSection === null ? "default" : "outline"}
         size="sm"
         onClick={() => onSelectSection(null)}
-        className="h-8"
+        className="h-7 sm:h-8 text-xs sm:text-sm"
       >
-        All Sections
-        <Badge variant="secondary" className="ml-2">
+        All
+        <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs">
           {sectionCounts.reduce((acc, c) => acc + c.count, 0)}
         </Badge>
       </Button>
@@ -35,10 +36,10 @@ export const SectionFilter = memo(function SectionFilter({ selectedSection, onSe
           variant={selectedSection === sectionValue ? "default" : "outline"}
           size="sm"
           onClick={() => onSelectSection(sectionValue)}
-          className="h-8"
+          className="h-7 sm:h-8 text-xs sm:text-sm"
         >
           {sectionValue}
-          <Badge variant="secondary" className="ml-2">
+          <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs">
             {count}
           </Badge>
         </Button>

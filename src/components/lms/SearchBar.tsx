@@ -17,7 +17,7 @@ export const SearchBar = memo(function SearchBar({
   return (
     <div className="relative w-full max-w-xl mx-auto">
       <div className="relative group">
-        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
+        <Search className="absolute left-3 sm:left-4 top-1/2 h-4 w-4 sm:h-5 sm:w-5 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
 
         <Input
           type="text"
@@ -25,7 +25,7 @@ export const SearchBar = memo(function SearchBar({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className="
-            h-12 pl-12 pr-12 text-base rounded-xl
+            h-10 sm:h-12 pl-10 sm:pl-12 pr-10 sm:pr-12 text-sm sm:text-base rounded-xl
             border-2 border-border/50
             bg-card
             text-foreground
@@ -45,9 +45,9 @@ export const SearchBar = memo(function SearchBar({
             variant="ghost"
             size="icon"
             onClick={() => onChange("")}
-            className="absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 rounded-lg hover:bg-muted"
+            className="absolute right-1 sm:right-2 top-1/2 h-7 w-7 sm:h-8 sm:w-8 -translate-y-1/2 rounded-lg hover:bg-muted"
           >
-            <X className="h-4 w-4" />
+            <X className="h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
         )}
       </div>
