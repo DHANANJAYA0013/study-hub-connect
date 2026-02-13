@@ -391,6 +391,15 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
             onEnded={() => setIsPlaying(false)}
           />
           
+          {/* Fullscreen Button - Top Right Corner */}
+          <button
+            onClick={handleFullscreen}
+            className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10 p-2 sm:p-2.5 rounded-lg bg-black/60 hover:bg-black/80 backdrop-blur-sm transition-all"
+            title="Fullscreen"
+          >
+            <Maximize className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+          </button>
+          
           {/* Play/Pause Overlay */}
           <button
             onClick={togglePlay}
@@ -455,15 +464,11 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
               </span>
             </div>
             
-            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-between sm:justify-end">
+            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-end">
               <div className="flex items-center gap-2">
                 <span className="text-xs sm:text-sm font-medium">{progressPercentage.toFixed(0)}%</span>
                 <Progress value={progressPercentage} className="w-16 sm:w-24 h-2" />
               </div>
-              
-              <Button variant="ghost" size="icon" onClick={handleFullscreen} className="h-8 w-8 sm:h-9 sm:w-9">
-                <Maximize className="h-3 w-3 sm:h-4 sm:w-4" />
-              </Button>
             </div>
           </div>
         </div>
