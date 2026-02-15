@@ -27,22 +27,71 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = api.onAuthStateChange(async (firebaseUser) => {
       if (firebaseUser) {
         try {
+          // Check if this is an admin email
+          const isAdmin = api.isAdminEmail(firebaseUser.email || '');
+          
           // Verify user exists in users collection (admin-approved only)
           const userRole = await api.getUserRole(firebaseUser.uid);
           
           if (!userRole) {
-            // User authenticated but not in users collection (not approved by admin)
-            await api.signOut();
-            setUser(null);
-            setSession(null);
-            setRole(null);
-            setLoading(false);
+            if (isAdmin) {
+              // Auto-create admin user in Firestore if they don't exist
+              const { db } = await import('@/config/firebase');
+              const { doc, setDoc } = await import('firebase/firestore');
+              
+              await setDoc(doc(db, 'users', firebaseUser.uid), {
+                email: firebaseUser.email,
+                full_name: firebaseUser.displayName || 'Admin',
+                role: 'admin',
+                created_at: new Date().toISOString(),
+                approved_at: new Date().toISOString(),
+              });
+              
+              // Set role to admin after creating the document
+              const userData: User = {
+                id: firebaseUser.uid,
+                email: firebaseUser.email,
+                full_name: firebaseUser.displayName,
+                avatar_url: firebaseUser.photoURL,
+              };
+              
+              const token = await firebaseUser.getIdToken();
+              setUser(userData);
+              setSession({ access_token: token, user: userData });
+              setRole('admin');
+              setLoading(false);
+              return;
+            } else {
+              // User authenticated but not in users collection (not approved by admin)
+              await api.signOut();
+              setUser(null);
+              setSession(null);
+              setRole(null);
+              setLoading(false);
+              
+              toast({
+                variant: "destructive",
+                title: "Account Not Approved",
+                description: "Your account is pending admin approval. Please wait for approval before signing in.",
+              });
+              return;
+            }
+          }
+          
+          // If user has admin role in Firestore, allow them to sign in
+          if (userRole === 'admin' || isAdmin) {
+            const token = await firebaseUser.getIdToken();
+            const userData: User = {
+              id: firebaseUser.uid,
+              email: firebaseUser.email,
+              full_name: firebaseUser.displayName,
+              avatar_url: firebaseUser.photoURL,
+            };
             
-            toast({
-              variant: "destructive",
-              title: "Account Not Approved",
-              description: "Your account is pending admin approval. Please wait for approval before signing in.",
-            });
+            setUser(userData);
+            setSession({ access_token: token, user: userData });
+            setRole(userRole);
+            setLoading(false);
             return;
           }
           

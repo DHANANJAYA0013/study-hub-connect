@@ -11,6 +11,19 @@ import { auth, db } from '@/config/firebase';
 
 export type AppRole = "admin" | "teacher" | "student";
 
+// Admin emails that can bypass approval and auto-create their accounts
+const ADMIN_EMAILS = [
+  "admin@lms.com",
+  "admin@studyhub.com",
+  "admin2026@lms.com",
+  // Add more admin emails here as needed
+];
+
+// Helper function to check if an email is an admin email
+export function isAdminEmail(email: string): boolean {
+  return ADMIN_EMAILS.includes(email.toLowerCase());
+}
+
 export interface User {
   id: string;
   email?: string | null;
@@ -106,12 +119,36 @@ export async function signIn(payload: {
       payload.password
     );
 
+    // Check if this is an admin email
+    const isAdmin = isAdminEmail(payload.email);
+
     // Verify user exists in users collection (admin-approved users only)
     const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
     if (!userDoc.exists()) {
-      // User authenticated but not approved by admin
-      await firebaseSignOut(auth);
-      return { error: "Your account is pending admin approval. Please wait for approval before signing in." };
+      if (isAdmin) {
+        // Auto-create admin user in Firestore
+        await setDoc(doc(db, 'users', userCredential.user.uid), {
+          email: userCredential.user.email,
+          full_name: userCredential.user.displayName || 'Admin',
+          role: 'admin',
+          created_at: new Date().toISOString(),
+          approved_at: new Date().toISOString(),
+        });
+      } else {
+        // User authenticated but not approved by admin
+        await firebaseSignOut(auth);
+        return { error: "Your account is pending admin approval. Please wait for approval before signing in." };
+      }
+    } else {
+      // User exists in Firestore - check if they are an admin
+      const userData = userDoc.data();
+      const userRole = userData?.role as AppRole;
+      
+      // If user is an admin, allow them to sign in regardless of approval status
+      if (userRole !== 'admin' && !isAdmin) {
+        // For non-admin users, they must be in the users collection (already approved)
+        // This is already handled by the userDoc.exists() check above
+      }
     }
 
     const token = await userCredential.user.getIdToken();
