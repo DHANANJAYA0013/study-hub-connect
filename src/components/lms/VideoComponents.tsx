@@ -9,6 +9,7 @@ import { Slider } from "@/components/ui/slider";
 import { useAuth } from "@/hooks/useAuth";
 import { useVideoDownload } from "@/hooks/useVideoDownload";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useToast } from "@/hooks/use-toast";
 
 // VideoCard Component
 interface VideoCardProps {
@@ -153,9 +154,14 @@ interface VideoPlayerProps {
   video: Video;
   startTime?: number;
   onTimeUpdate: (currentTime: number, duration: number) => void;
+  wasCompleted?: boolean;
+  onPlayNext?: () => void;
+  hasNextVideo?: boolean;
+  autoPlay?: boolean;
+  onAutoPlayHandled?: () => void;
 }
 
-export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerProps) {
+export function VideoPlayer({ video, startTime = 0, onTimeUpdate, wasCompleted = false, onPlayNext, hasNextVideo = false, autoPlay = false, onAutoPlayHandled }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -163,11 +169,15 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isOfflineAvailable, setIsOfflineAvailable] = useState(false);
+  const [isPersistentlyCompleted, setIsPersistentlyCompleted] = useState(wasCompleted);
   const lastSaveTimeRef = useRef<number>(0);
   const hasSetInitialTimeRef = useRef<boolean>(false);
+  const hasShownCompletionRef = useRef<boolean>(false);
+  const wasCompletedOnLoadRef = useRef<boolean>(false);
   const { role, user } = useAuth();
   const { downloadVideo, deleteVideo, getDownloadProgress, isVideoOffline } = useVideoDownload();
   const isOnline = useOnlineStatus();
+  const { toast } = useToast();
   
   const downloadProgress = getDownloadProgress(video.id);
 
@@ -191,14 +201,18 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
   // Reset tracking when video changes
   useEffect(() => {
     hasSetInitialTimeRef.current = false;
+    hasShownCompletionRef.current = false;
+    wasCompletedOnLoadRef.current = wasCompleted; // Use the passed prop
+    setIsPersistentlyCompleted(wasCompleted);
     setCurrentTime(0);
     setIsPlaying(false);
-  }, [video.id]);
+  }, [video.id, wasCompleted]);
 
   const handleTimeUpdate = () => {
     const video = videoRef.current;
     if (video && video.duration > 0) {
       const newTime = video.currentTime;
+      const percentage = (newTime / video.duration) * 100;
       
       // Update UI less frequently to reduce re-renders
       if (Math.abs(newTime - currentTime) >= 0.5) {
@@ -211,6 +225,20 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
         lastSaveTimeRef.current = now;
         onTimeUpdate(newTime, video.duration);
       }
+      
+      // Check for completion (90% or more is considered complete)
+      if (percentage >= 90 && !hasShownCompletionRef.current) {
+        hasShownCompletionRef.current = true;
+        wasCompletedOnLoadRef.current = false; // Clear flag once we reach completion
+        setIsPersistentlyCompleted(true);
+        // Save final progress
+        onTimeUpdate(newTime, video.duration);
+        // Show completion toast
+        toast({
+          title: "Video Completed! 🎉",
+          description: `You've completed "${video.title}". Keep up the great work!`,
+        });
+      }
     }
   };
 
@@ -218,11 +246,28 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
     const video = videoRef.current;
     if (video) {
       setDuration(video.duration);
+      // Track if video was completed when loaded
+      wasCompletedOnLoadRef.current = wasCompleted;
+      
       // Only set initial time once when video first loads
-      if (!hasSetInitialTimeRef.current && startTime > 0 && startTime < video.duration) {
-        video.currentTime = startTime;
-        setCurrentTime(startTime);
+      if (!hasSetInitialTimeRef.current && startTime > 0 && video.duration > 0) {
+        const safeStartTime = Math.min(startTime, video.duration);
+        video.currentTime = safeStartTime;
+        setCurrentTime(safeStartTime);
         hasSetInitialTimeRef.current = true;
+      }
+
+      if (autoPlay) {
+        video.play()
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch(() => {
+            setIsPlaying(false);
+          })
+          .finally(() => {
+            onAutoPlayHandled?.();
+          });
       }
     }
   };
@@ -312,6 +357,7 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
   };
 
   const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const isCompleted = isPersistentlyCompleted || progressPercentage >= 99.5;
 
   return (
     <Card className="overflow-hidden shadow-card">
@@ -388,7 +434,22 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
             onLoadedMetadata={handleLoadedMetadata}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
-            onEnded={() => setIsPlaying(false)}
+            onEnded={() => {
+              setIsPlaying(false);
+              // Ensure we save progress at 100% when video ends
+              const video = videoRef.current;
+              if (video && video.duration > 0) {
+                onTimeUpdate(video.duration, video.duration);
+                // Show completion if not already shown
+                if (!hasShownCompletionRef.current) {
+                  hasShownCompletionRef.current = true;
+                  toast({
+                    title: "Video Completed! 🎉",
+                    description: `You've completed "${video.title}". Keep up the great work!`,
+                  });
+                }
+              }
+            }}
           />
           
           {/* Fullscreen Button - Top Right Corner */}
@@ -468,6 +529,21 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate }: VideoPlayerP
               <div className="flex items-center gap-2">
                 <span className="text-xs sm:text-sm font-medium">{progressPercentage.toFixed(0)}%</span>
                 <Progress value={progressPercentage} className="w-16 sm:w-24 h-2" />
+                {isCompleted && (
+                  <Badge variant="secondary" className="text-xs">
+                    Completed
+                  </Badge>
+                )}
+                {isCompleted && hasNextVideo && onPlayNext && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={onPlayNext}
+                    className="text-xs sm:text-sm"
+                  >
+                    Play Next
+                  </Button>
+                )}
               </div>
             </div>
           </div>
@@ -525,7 +601,7 @@ export const VideoStats = memo(function VideoStats({ subjects, progress }: Video
       bgColor: "bg-orange-500/10"
     },
     {
-      title: "Completed",
+      title: "Completed Videos",
       value: completedVideos,
       icon: CheckCircle2,
       color: "text-green-500",
@@ -542,7 +618,7 @@ export const VideoStats = memo(function VideoStats({ subjects, progress }: Video
               <div className={`p-1.5 sm:p-2 rounded-lg ${stat.bgColor}`}>
                 <stat.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${stat.color}`} />
               </div>
-              {stat.title === "Completed" && watchedVideos > 0 && (
+              {stat.title === "Completed Videos" && watchedVideos > 0 && (
                 <Badge variant="secondary" className="text-xs">
                   {Math.round((completedVideos / totalVideos) * 100)}%
                 </Badge>

@@ -14,11 +14,12 @@ import { useVideoProgress } from "@/hooks/useVideoProgress";
 export default function TopicView() {
   const { category, topic } = useParams<{ category: string; topic: string }>();
   const navigate = useNavigate();
-  const { user, role } = useAuth();
+  const { user, role, loading } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+  const [shouldAutoPlayNext, setShouldAutoPlayNext] = useState(false);
   const { saveProgress, getProgress, getStartTime } = useVideoProgress();
   const videoSectionRef = useRef<HTMLDivElement>(null);
   const selectedVideoRef = useRef<Video | null>(null);
@@ -91,6 +92,7 @@ export default function TopicView() {
   const handleSelectSubject = useCallback((subject: Subject) => {
     setSelectedSubject(subject);
     setSelectedVideo(subject.videos[0] || null);
+    setShouldAutoPlayNext(false);
     
     // Scroll to video section after a short delay to allow state update
     setTimeout(() => {
@@ -106,6 +108,33 @@ export default function TopicView() {
 
   const handleSelectVideo = useCallback((video: Video) => {
     setSelectedVideo(video);
+    setShouldAutoPlayNext(false);
+  }, []);
+
+  const currentVideoIndex = useMemo(() => {
+    if (!selectedSubject || !selectedVideo) {
+      return -1;
+    }
+
+    return selectedSubject.videos.findIndex((video) => video.id === selectedVideo.id);
+  }, [selectedSubject, selectedVideo]);
+
+  const hasNextVideo = currentVideoIndex >= 0 && selectedSubject ? currentVideoIndex < selectedSubject.videos.length - 1 : false;
+
+  const handlePlayNextVideo = useCallback(() => {
+    if (!selectedSubject || currentVideoIndex < 0) {
+      return;
+    }
+
+    const nextVideo = selectedSubject.videos[currentVideoIndex + 1];
+    if (nextVideo) {
+      setShouldAutoPlayNext(true);
+      setSelectedVideo(nextVideo);
+    }
+  }, [selectedSubject, currentVideoIndex]);
+
+  const handleAutoPlayHandled = useCallback(() => {
+    setShouldAutoPlayNext(false);
   }, []);
 
   const handleSearchChange = useCallback((query: string) => {
@@ -115,6 +144,11 @@ export default function TopicView() {
   const handleClassSelect = useCallback((classValue: string | null) => {
     setSelectedClass(classValue);
   }, []);
+
+  // Show loading state while auth is initializing
+  if (loading) {
+    return null;
+  }
 
   if (!user) {
     navigate("/");
@@ -196,6 +230,11 @@ export default function TopicView() {
                       video={selectedVideo}
                       startTime={getStartTime(selectedVideo.id)}
                       onTimeUpdate={handleVideoTimeUpdate}
+                      wasCompleted={getProgress(selectedVideo.id).completed}
+                      onPlayNext={handlePlayNextVideo}
+                      hasNextVideo={hasNextVideo}
+                      autoPlay={shouldAutoPlayNext}
+                      onAutoPlayHandled={handleAutoPlayHandled}
                     />
                   </div>
                   

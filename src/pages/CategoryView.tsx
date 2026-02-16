@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 export default function CategoryView() {
   const { category } = useParams<{ category: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   // Get category name
   const categoryName = category?.charAt(0).toUpperCase() + category?.slice(1) || "";
@@ -77,6 +77,11 @@ export default function CategoryView() {
   const handleTopicClick = useCallback((topicName: string) => {
     navigate(`/category/${category}/topic/${topicName.toLowerCase()}`);
   }, [category, navigate]);
+
+  // Show loading state while auth is initializing
+  if (loading) {
+    return null;
+  }
 
   if (!user) {
     navigate("/");

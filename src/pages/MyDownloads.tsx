@@ -31,7 +31,7 @@ export default function MyDownloads() {
   const navigate = useNavigate();
   const isOnline = useOnlineStatus();
   const { offlineVideos, deleteVideo, clearAllVideos } = useVideoDownload();
-  const { saveProgress, getStartTime } = useVideoProgress();
+  const { saveProgress, getStartTime, getProgress } = useVideoProgress();
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const selectedVideoRef = useRef<Video | null>(null);
 
@@ -143,6 +143,7 @@ export default function MyDownloads() {
               video={selectedVideo}
               startTime={getStartTime(selectedVideo.id)}
               onTimeUpdate={handleVideoTimeUpdate}
+              wasCompleted={getProgress(selectedVideo.id).completed}
             />
           </div>
         )}
