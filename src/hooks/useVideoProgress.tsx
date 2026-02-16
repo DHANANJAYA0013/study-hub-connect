@@ -11,10 +11,12 @@ interface VideoProgress {
   };
 }
 
-const STORAGE_KEY = "lms_video_progress";
+const STORAGE_KEY_PREFIX = "lms_video_progress";
 
-const getStoredProgress = () => {
-  const stored = localStorage.getItem(STORAGE_KEY);
+const getStorageKey = (userId?: string) => `${STORAGE_KEY_PREFIX}_${userId || "guest"}`;
+
+const getStoredProgress = (userId?: string) => {
+  const stored = localStorage.getItem(getStorageKey(userId));
   if (!stored) {
     return {};
   }
@@ -58,6 +60,35 @@ const mergeProgressMaps = (firestoreProgress: VideoProgress, localProgress: Vide
   return merged;
 };
 
+const applyCompletedIds = (progressMap: VideoProgress, completedIds: string[]): VideoProgress => {
+  if (!completedIds.length) {
+    return progressMap;
+  }
+
+  const updated = { ...progressMap };
+
+  completedIds.forEach((videoId) => {
+    const existing = updated[videoId];
+    if (existing) {
+      updated[videoId] = {
+        ...existing,
+        completed: true,
+        percentage: Math.max(existing.percentage ?? 0, 90),
+      };
+      return;
+    }
+
+    updated[videoId] = {
+      currentTime: 0,
+      duration: 0,
+      percentage: 100,
+      completed: true,
+    };
+  });
+
+  return updated;
+};
+
 export function useVideoProgress() {
   const [progress, setProgress] = useState<VideoProgress>({});
   const progressRef = useRef<VideoProgress>({});
@@ -77,10 +108,12 @@ export function useVideoProgress() {
         setIsLoading(true);
         try {
           const firestoreProgress = await api.getAllVideoProgress(user.id);
-          const localProgress = getStoredProgress();
+          const localProgress = getStoredProgress(user.id);
           const mergedProgress = mergeProgressMaps(firestoreProgress, localProgress);
-          setProgress(mergedProgress);
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedProgress));
+          const completedIds = await api.getCompletedVideoIds(user.id);
+          const finalProgress = applyCompletedIds(mergedProgress, completedIds);
+          setProgress(finalProgress);
+          localStorage.setItem(getStorageKey(user.id), JSON.stringify(finalProgress));
         } catch (error) {
           console.error("Failed to load video progress from Firestore:", error);
           // Fallback to localStorage if Firestore fails
@@ -98,7 +131,7 @@ export function useVideoProgress() {
   }, [user?.id]);
 
   const loadFromLocalStorage = () => {
-    setProgress(getStoredProgress());
+    setProgress(getStoredProgress(user?.id));
   };
 
   // Save progress to Firestore (if authenticated) or localStorage
@@ -132,6 +165,9 @@ export function useVideoProgress() {
       try {
         // Await the save to ensure it completes
         await api.saveVideoProgress(user.id, videoId, progressData.currentTime, progressData.duration);
+        if (progressData.completed) {
+          await api.saveCompletedVideo(user.id, videoId);
+        }
       } catch (error) {
         console.error("Failed to save video progress to Firestore:", error);
         // localStorage already saved above, so we're covered
@@ -140,10 +176,11 @@ export function useVideoProgress() {
   }, [user?.id]);
 
   const saveToLocalStorage = (videoId: string, progressData: any) => {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const key = getStorageKey(user?.id);
+    const stored = localStorage.getItem(key);
     const current = stored ? JSON.parse(stored) : {};
     const updated = { ...current, [videoId]: progressData };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    localStorage.setItem(key, JSON.stringify(updated));
   };
 
   const getProgress = useCallback((videoId: string) => {

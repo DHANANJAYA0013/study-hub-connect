@@ -333,6 +333,39 @@ export async function saveVideoProgress(userId: string, videoId: string, current
   }
 }
 
+// Save completed video marker for a user
+export async function saveCompletedVideo(userId: string, videoId: string) {
+  try {
+    await setDoc(doc(db, 'completed_videos', `${userId}_${videoId}`), {
+      userId,
+      videoId,
+      completed: true,
+      completed_at: new Date().toISOString(),
+    }, { merge: true });
+
+    return { success: true };
+  } catch (err: any) {
+    console.error("Error saving completed video:", err);
+    return { success: false, error: err?.message ?? String(err) };
+  }
+}
+
+// Get all completed video IDs for a user
+export async function getCompletedVideoIds(userId: string) {
+  try {
+    const completedQuery = query(
+      collection(db, 'completed_videos'),
+      where('userId', '==', userId)
+    );
+
+    const completedSnapshot = await getDocs(completedQuery);
+    return completedSnapshot.docs.map((completedDoc) => completedDoc.data().videoId as string);
+  } catch (err: any) {
+    console.error("Error getting completed videos:", err);
+    return [];
+  }
+}
+
 // Get video progress for a user
 export async function getVideoProgress(userId: string, videoId: string) {
   try {
@@ -386,6 +419,8 @@ export default {
   rejectSignupRequest,
   deleteUser,
   saveVideoProgress,
+  saveCompletedVideo,
   getVideoProgress,
   getAllVideoProgress,
+  getCompletedVideoIds,
 };
