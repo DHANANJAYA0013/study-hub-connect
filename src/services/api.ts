@@ -6,7 +6,7 @@ import {
   updateProfile,
   User as FirebaseUser
 } from 'firebase/auth';
-import { doc, setDoc, getDoc, getDocs, collection, deleteDoc, query, where } from 'firebase/firestore';
+import { doc, setDoc, getDoc, getDocs, collection, deleteDoc, query, where, arrayUnion } from 'firebase/firestore';
 import { auth, db } from '@/config/firebase';
 
 export type AppRole = "admin" | "teacher" | "student";
@@ -343,6 +343,12 @@ export async function saveCompletedVideo(userId: string, videoId: string) {
       completed_at: new Date().toISOString(),
     }, { merge: true });
 
+    // Also update the user's document with completed video info
+    await setDoc(doc(db, 'users', userId), {
+      completedVideos: arrayUnion(videoId),
+      lastCompletedAt: new Date().toISOString(),
+    }, { merge: true });
+
     return { success: true };
   } catch (err: any) {
     console.error("Error saving completed video:", err);
@@ -407,6 +413,61 @@ export async function getAllVideoProgress(userId: string) {
   }
 }
 
+// Get dashboard data for a user (completed videos list with details)
+export async function getUserDashboardData(userId: string) {
+  try {
+    // Get user doc for completedVideos array
+    const userDoc = await getDoc(doc(db, 'users', userId));
+    const userData = userDoc.exists() ? userDoc.data() : {};
+    const completedVideoIds: string[] = userData?.completedVideos || [];
+
+    // Get all video progress
+    const progressQuery = query(
+      collection(db, 'video_progress'),
+      where('userId', '==', userId)
+    );
+    const progressSnapshot = await getDocs(progressQuery);
+    const progressMap: Record<string, any> = {};
+    progressSnapshot.docs.forEach(d => {
+      const data = d.data();
+      progressMap[data.videoId] = data;
+    });
+
+    // Get completed_videos docs for timestamps
+    const completedQuery = query(
+      collection(db, 'completed_videos'),
+      where('userId', '==', userId)
+    );
+    const completedSnapshot = await getDocs(completedQuery);
+    const completedMap: Record<string, string> = {};
+    completedSnapshot.docs.forEach(d => {
+      const data = d.data();
+      completedMap[data.videoId] = data.completed_at || '';
+    });
+
+    return {
+      completedVideoIds,
+      progressMap,
+      completedMap,
+      totalWatched: Object.keys(progressMap).filter(k => (progressMap[k].percentage || 0) > 0).length,
+      totalCompleted: completedVideoIds.length,
+      userName: userData?.full_name || userData?.email || '',
+      userRole: userData?.role || '',
+    };
+  } catch (err: any) {
+    console.error("Error getting user dashboard data:", err);
+    return {
+      completedVideoIds: [],
+      progressMap: {},
+      completedMap: {},
+      totalWatched: 0,
+      totalCompleted: 0,
+      userName: '',
+      userRole: '',
+    };
+  }
+}
+
 export default {
   getSession,
   signUp,
@@ -423,4 +484,5 @@ export default {
   getVideoProgress,
   getAllVideoProgress,
   getCompletedVideoIds,
+  getUserDashboardData,
 };

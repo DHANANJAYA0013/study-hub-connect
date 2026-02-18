@@ -206,7 +206,44 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate, wasCompleted =
     setIsPersistentlyCompleted(wasCompleted);
     setCurrentTime(0);
     setIsPlaying(false);
-  }, [video.id, wasCompleted]);
+  }, [video.id]);
+
+  // Update completion state when it loads asynchronously
+  useEffect(() => {
+    wasCompletedOnLoadRef.current = wasCompleted;
+    setIsPersistentlyCompleted(wasCompleted);
+  }, [wasCompleted]);
+
+  // Seek to startTime when progress loads after video metadata is already available
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (
+      !hasSetInitialTimeRef.current &&
+      startTime > 0 &&
+      vid &&
+      vid.readyState >= 1 && // HAVE_METADATA
+      vid.duration > 0
+    ) {
+      const safeStartTime = Math.min(startTime, vid.duration);
+      vid.currentTime = safeStartTime;
+      setCurrentTime(safeStartTime);
+      hasSetInitialTimeRef.current = true;
+    }
+  }, [startTime]);
+
+  // Save progress before page unload (refresh / close)
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const vid = videoRef.current;
+      if (vid && vid.duration > 0 && vid.currentTime > 0) {
+        onTimeUpdate(vid.currentTime, vid.duration);
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [onTimeUpdate]);
 
   const handleTimeUpdate = () => {
     const video = videoRef.current;
@@ -321,6 +358,10 @@ export function VideoPlayer({ video, startTime = 0, onTimeUpdate, wasCompleted =
     if (video) {
       video.currentTime = value[0];
       setCurrentTime(value[0]);
+      // Save progress immediately when user seeks
+      if (video.duration > 0) {
+        onTimeUpdate(value[0], video.duration);
+      }
     }
   };
 

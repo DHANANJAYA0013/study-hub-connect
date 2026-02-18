@@ -184,13 +184,13 @@ export function useVideoProgress() {
   };
 
   const getProgress = useCallback((videoId: string) => {
-    return progressRef.current[videoId] || { currentTime: 0, duration: 0, percentage: 0, completed: false };
-  }, []);
+    return progress[videoId] || { currentTime: 0, duration: 0, percentage: 0, completed: false };
+  }, [progress]);
 
   const getStartTime = useCallback((videoId: string) => {
-    const videoProgress = progressRef.current[videoId];
+    const videoProgress = progress[videoId];
     return videoProgress?.currentTime || 0;
-  }, []);
+  }, [progress]);
 
   return { progress, saveProgress, getProgress, getStartTime, isLoading };
 }
