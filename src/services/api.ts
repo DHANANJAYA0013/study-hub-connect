@@ -6,7 +6,7 @@ import {
   updateProfile,
   User as FirebaseUser
 } from 'firebase/auth';
-import { doc, setDoc, getDoc, getDocs, collection, deleteDoc, query, where, arrayUnion } from 'firebase/firestore';
+import { doc, setDoc, getDoc, getDocs, collection, deleteDoc, query, where, arrayUnion, increment } from 'firebase/firestore';
 import { auth, db } from '@/config/firebase';
 
 export type AppRole = "admin" | "teacher" | "student";
@@ -336,6 +336,13 @@ export async function saveVideoProgress(userId: string, videoId: string, current
 // Save completed video marker for a user
 export async function saveCompletedVideo(userId: string, videoId: string) {
   try {
+    // Avoid double-counting if already marked completed
+    const completedRef = doc(db, 'completed_videos', `${userId}_${videoId}`);
+    const existing = await getDoc(completedRef);
+    if (existing.exists()) {
+      return { success: true };
+    }
+
     await setDoc(doc(db, 'completed_videos', `${userId}_${videoId}`), {
       userId,
       videoId,
@@ -347,6 +354,7 @@ export async function saveCompletedVideo(userId: string, videoId: string) {
     await setDoc(doc(db, 'users', userId), {
       completedVideos: arrayUnion(videoId),
       lastCompletedAt: new Date().toISOString(),
+      totalCompletedVideos: increment(1),
     }, { merge: true });
 
     return { success: true };
