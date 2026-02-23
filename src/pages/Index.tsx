@@ -16,6 +16,11 @@ export default function Index() {
   const location = useLocation();
   const [clickCount, setClickCount] = useState(0);
   const { progress } = useVideoProgress();
+  const displayName = useMemo(() => {
+    if (user?.full_name?.trim()) return user.full_name.trim();
+    return "there";
+  }, [user]);
+ 
 
   // Handle navigation from My Downloads page
   useEffect(() => {
@@ -293,9 +298,9 @@ export default function Index() {
         {/* Hero Section */}
         <section className="relative overflow-hidden rounded-xl sm:rounded-2xl gradient-bg-hero p-6 sm:p-8 md:p-12 text-white">
           <div className="absolute inset-0 bg-black/20" />
-          <div className="relative z-10 max-w-2xl">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3">
-              Welcome back{role === "teacher" ? ", Teacher" : ""}! 👋
+          <div className="relative z-10 max-w-5xl">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-5">
+              Welcome back, {displayName}! 👋
             </h1>
             <p className="text-base sm:text-lg text-white/90 mb-4 sm:mb-6">
               {role === "teacher" 

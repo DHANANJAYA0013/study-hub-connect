@@ -32,6 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           
           // Verify user exists in users collection (admin-approved only)
           const userRole = await api.getUserRole(firebaseUser.uid);
+          const profile = await api.getUserProfile(firebaseUser.uid);
           
           if (!userRole) {
             if (isAdmin) {
@@ -51,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               const userData: User = {
                 id: firebaseUser.uid,
                 email: firebaseUser.email,
-                full_name: firebaseUser.displayName,
+                full_name: profile?.full_name || firebaseUser.displayName || 'Admin',
                 avatar_url: firebaseUser.photoURL,
               };
               
@@ -84,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const userData: User = {
               id: firebaseUser.uid,
               email: firebaseUser.email,
-              full_name: firebaseUser.displayName,
+              full_name: profile?.full_name || firebaseUser.displayName || 'Admin',
               avatar_url: firebaseUser.photoURL,
             };
             
@@ -99,7 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const userData: User = {
             id: firebaseUser.uid,
             email: firebaseUser.email,
-            full_name: firebaseUser.displayName,
+            full_name: profile?.full_name || firebaseUser.displayName,
             avatar_url: firebaseUser.photoURL,
           };
           

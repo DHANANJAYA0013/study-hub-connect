@@ -212,6 +212,26 @@ export async function getUserRole(userId: string): Promise<AppRole | null> {
   }
 }
 
+// Get user profile (name, email, role) from Firestore users collection
+export async function getUserProfile(userId: string): Promise<(User & { role?: AppRole | null }) | null> {
+  try {
+    const userDoc = await getDoc(doc(db, 'users', userId));
+    if (!userDoc.exists()) return null;
+
+    const data = userDoc.data();
+    return {
+      id: userId,
+      email: data?.email ?? null,
+      full_name: data?.full_name ?? null,
+      avatar_url: data?.avatar_url ?? null,
+      role: (data?.role as AppRole) ?? null,
+    };
+  } catch (err) {
+    console.warn("getUserProfile failed", err);
+    return null;
+  }
+}
+
 // Listen to auth state changes
 export function onAuthStateChange(callback: (user: FirebaseUser | null) => void) {
   return onAuthStateChanged(auth, callback);
@@ -482,6 +502,7 @@ export default {
   signIn,
   signOut,
   getUserRole,
+  getUserProfile,
   onAuthStateChange,
   getSignupRequests,
   approveSignupRequest,
