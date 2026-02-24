@@ -52,13 +52,13 @@ export default function Index() {
     
     return [
       {
-        id: "prasthuti",
-        name: "Prasthuti",
+        id: "Prastuti",
+        name: "Prastuti",
         description: "Comprehensive mathematics and science curriculum for classes 8-10",
         color: "from-blue-500 to-indigo-600",
         icon: <Microscope className="h-8 w-8 text-white" />,
-        videoCount: categoryMap.get("Prasthuti")?.videoCount || 0,
-        subjectCount: categoryMap.get("Prasthuti")?.subjectCount || 0
+        videoCount: categoryMap.get("Prastuti")?.videoCount || 0,
+        subjectCount: categoryMap.get("Prastuti")?.subjectCount || 0
       },
       {
         id: "anubhav",
@@ -288,6 +288,19 @@ export default function Index() {
       </div>
     );
   }
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
   // LMS Dashboard - Shown when logged in
   return (
