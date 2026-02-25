@@ -23,8 +23,9 @@ export default function TopicView() {
   const [shouldAutoPlayNext, setShouldAutoPlayNext] = useState(false);
   const { saveProgress, getProgress, getStartTime } = useVideoProgress();
   const videoSectionRef = useRef<HTMLDivElement>(null);
+  const chapterSectionRef = useRef<HTMLDivElement>(null);
   const selectedVideoRef = useRef<Video | null>(null);
-  
+
   // Keep ref in sync with state
   useEffect(() => {
     selectedVideoRef.current = selectedVideo;
@@ -37,56 +38,56 @@ export default function TopicView() {
   // Filter subjects by category and topic
   const topicSubjects = useMemo(() => {
     return subjects.filter(
-      subject => 
-        subject.section === categoryName && 
+      subject =>
+        subject.section === categoryName &&
         subject.topic === topicName
     );
   }, [categoryName, topicName]);
 
   const filteredSubjects = useMemo(() => {
     let filtered = topicSubjects;
-    
+
     // Filter by class if selected
     if (selectedClass) {
       filtered = filtered.filter(subject => subject.class === selectedClass);
     }
-    
+
     // Filter by search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter((subject) => {
-        const matchesSubject = 
+        const matchesSubject =
           subject.name.toLowerCase().includes(query) ||
           subject.description.toLowerCase().includes(query);
-        
+
         const matchesVideo = subject.videos.some(
           (video) =>
             video.title.toLowerCase().includes(query) ||
             video.description.toLowerCase().includes(query)
         );
-        
+
         return matchesSubject || matchesVideo;
       });
     }
-    
+
     return filtered;
   }, [topicSubjects, searchQuery, selectedClass]);
 
   const classCounts = useMemo(() => {
     const counts: { class: string; count: number }[] = [];
     const classMap = new Map<string, number>();
-    
+
     topicSubjects.forEach(subject => {
       if (subject.class) {
         const current = classMap.get(subject.class) || 0;
         classMap.set(subject.class, current + subject.videos.length);
       }
     });
-    
+
     classMap.forEach((count, className) => {
       counts.push({ class: className, count });
     });
-    
+
     return counts.sort((a, b) => a.class.localeCompare(b.class));
   }, [topicSubjects]);
 
@@ -115,6 +116,14 @@ export default function TopicView() {
     setSelectedChapter(null);
     setSelectedVideo(null);
     setShouldAutoPlayNext(false);
+    const hasChapters = subject.videos.some(v => v.chapterName);
+    setTimeout(() => {
+      if (hasChapters) {
+        chapterSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        videoSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   }, []);
 
   const handleSelectChapter = useCallback((chapterName: string) => {
@@ -182,10 +191,10 @@ export default function TopicView() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container py-4 sm:py-6 md:py-8 px-4 space-y-6 sm:space-y-8">
         {/* Header with Back Button */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+        {/* <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
           <Button
             variant="outline"
             size="sm"
@@ -198,6 +207,26 @@ export default function TopicView() {
           </Button>
           <div className="flex-1">
             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">{categoryName} - {topicName}</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">
+              {topicSubjects.length} classes available
+            </p>
+          </div>
+        </div> */}
+        <div className="flex flex-col gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate(`/category/${category}`)}
+            className="gap-2 w-fit"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span >Back to {categoryName}</span>
+          </Button>
+
+          <div>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">
+              {categoryName} - {topicName}
+            </h1>
             <p className="text-sm sm:text-base text-muted-foreground">
               {topicSubjects.length} classes available
             </p>
@@ -218,7 +247,7 @@ export default function TopicView() {
               <h2 className="text-xl sm:text-2xl font-bold">Browse Classes</h2>
               <p className="text-sm sm:text-base text-muted-foreground">Choose a class to start learning</p>
             </div>
-            
+
             {/* Class Filter - only show if there are classes */}
             {classCounts.length > 0 && (
               <ClassFilter
@@ -228,7 +257,7 @@ export default function TopicView() {
               />
             )}
           </div>
-          
+
           <SubjectGrid
             subjects={filteredSubjects}
             selectedSubject={selectedSubject}
@@ -238,7 +267,7 @@ export default function TopicView() {
 
         {/* Chapter Topics Section - horizontal row style, distinct from class cards */}
         {selectedSubject && chapterGroups.length > 0 && (
-          <section className="animate-fade-in">
+          <section className="animate-fade-in" ref={chapterSectionRef}>
             <div className="flex items-center gap-3 mb-4 sm:mb-5">
               <div className="h-8 w-1 rounded-full bg-primary" />
               <div>
@@ -254,44 +283,39 @@ export default function TopicView() {
                   <button
                     key={ch.name}
                     onClick={() => handleSelectChapter(ch.name)}
-                    className={`group w-full text-left flex items-center gap-4 px-4 py-3 rounded-xl border transition-all duration-200 ${
-                      isActive
+                    className={`group w-full text-left flex items-center gap-4 px-4 py-3 rounded-xl border transition-all duration-200 ${isActive
                         ? "bg-primary text-primary-foreground border-primary shadow-md"
                         : "bg-card border-border hover:border-primary/50 hover:bg-accent/50 hover:shadow-sm"
-                    }`}
+                      }`}
                   >
                     {/* Index number */}
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                      isActive
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${isActive
                         ? "bg-white/20 text-primary-foreground"
                         : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
-                    }`}>
+                      }`}>
                       {isActive ? <CheckCircle2 className="h-4 w-4" /> : idx + 1}
                     </span>
 
                     {/* Topic name */}
-                    <span className={`flex-1 font-medium text-sm sm:text-base truncate ${
-                      isActive ? "text-primary-foreground" : "text-foreground"
-                    }`}>
+                    <span className={`flex-1 font-medium text-sm sm:text-base truncate ${isActive ? "text-primary-foreground" : "text-foreground"
+                      }`}>
                       {ch.name}
                     </span>
 
                     {/* Video count pill */}
-                    <span className={`flex-shrink-0 flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
-                      isActive
+                    <span className={`flex-shrink-0 flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${isActive
                         ? "bg-white/20 text-primary-foreground"
                         : "bg-muted text-muted-foreground"
-                    }`}>
+                      }`}>
                       <PlayCircle className="h-3 w-3" />
                       {ch.count}
                     </span>
 
                     {/* Arrow */}
-                    <ChevronRight className={`flex-shrink-0 h-4 w-4 transition-transform duration-200 ${
-                      isActive
+                    <ChevronRight className={`flex-shrink-0 h-4 w-4 transition-transform duration-200 ${isActive
                         ? "text-primary-foreground"
                         : "text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5"
-                    }`} />
+                      }`} />
                   </button>
                 );
               })}
@@ -312,7 +336,7 @@ export default function TopicView() {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
                   <div className="lg:col-span-2">
                     <VideoPlayer
@@ -327,7 +351,7 @@ export default function TopicView() {
                     />
 
                   </div>
-                  
+
                   <div className="lg:col-span-1">
                     <VideoList
                       subject={{ ...selectedSubject, videos: chapterVideos }}

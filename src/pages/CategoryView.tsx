@@ -94,7 +94,8 @@ export default function CategoryView() {
       
       <main className="container py-4 sm:py-6 md:py-8 px-4 space-y-6 sm:space-y-8">
         {/* Header with Back Button */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+        {/* <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4"> */}
+        <div className="flex flex-col gap-3">
           <Button
             variant="outline"
             size="sm"
