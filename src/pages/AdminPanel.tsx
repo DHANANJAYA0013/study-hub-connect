@@ -50,6 +50,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
+import { ClassPasscodeManager } from "@/components/lms/ClassPasscodeManager";
 
 interface UserData {
   id: string;
@@ -548,6 +549,11 @@ export default function AdminPanel() {
                 <span className="hidden sm:inline">Settings</span>
                 <span className="sm:hidden">Config</span>
               </TabsTrigger>
+              <TabsTrigger value="passcodes" className="gap-1 sm:gap-2 text-xs sm:text-sm flex-1 sm:flex-initial">
+                <KeyRound className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Passcodes</span>
+                <span className="sm:hidden">Codes</span>
+              </TabsTrigger>
             </TabsList>
           </div>
 
@@ -757,6 +763,11 @@ export default function AdminPanel() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Passcodes Tab */}
+          <TabsContent value="passcodes" className="space-y-4">
+            <ClassPasscodeManager />
           </TabsContent>
         </Tabs>
       </main>

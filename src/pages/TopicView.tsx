@@ -6,7 +6,9 @@ import { SearchBar } from "@/components/lms/SearchBar";
 import { SubjectGrid } from "@/components/lms/SubjectGrid";
 import { VideoPlayer, VideoList } from "@/components/lms/VideoComponents";
 import { ClassFilter } from "@/components/lms/ClassFilter";
+import { PasscodeModal } from "@/components/lms/PasscodeModal";
 import { subjects, Subject, Video } from "@/data/subjects";
+import { getAllClassPasscodes, getClassPasscode } from "@/services/api";
 import { ArrowLeft, BookOpen, PlayCircle, ChevronRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useVideoProgress } from "@/hooks/useVideoProgress";
@@ -21,6 +23,14 @@ export default function TopicView() {
   const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const [shouldAutoPlayNext, setShouldAutoPlayNext] = useState(false);
+  const [passcodeModal, setPasscodeModal] = useState<{
+    open: boolean;
+    subject: Subject | null;
+    className: string;
+  }>({ open: false, subject: null, className: "" });
+  // Preloaded passcodes map: { "Class 8": "abc", ... }
+  const [classPasscodes, setClassPasscodes] = useState<Record<string, string>>({});
+  const [passcodesLoaded, setPasscodesLoaded] = useState(false);
   const { saveProgress, getProgress, getStartTime } = useVideoProgress();
   const videoSectionRef = useRef<HTMLDivElement>(null);
   const chapterSectionRef = useRef<HTMLDivElement>(null);
@@ -30,6 +40,15 @@ export default function TopicView() {
   useEffect(() => {
     selectedVideoRef.current = selectedVideo;
   }, [selectedVideo]);
+
+  // Preload all class passcodes once auth is ready (only needed for students)
+  useEffect(() => {
+    if (loading || role === "teacher" || role === "admin") return;
+    getAllClassPasscodes().then((data) => {
+      setClassPasscodes(data);
+      setPasscodesLoaded(true);
+    });
+  }, [loading, role]);
 
   // Get category and topic names
   const categoryName = category?.charAt(0).toUpperCase() + category?.slice(1) || "";
@@ -111,7 +130,8 @@ export default function TopicView() {
     return selectedSubject.videos.filter(v => v.chapterName === selectedChapter);
   }, [selectedSubject, selectedChapter, chapterGroups]);
 
-  const handleSelectSubject = useCallback((subject: Subject) => {
+  // Core logic to actually select a subject (called after passcode passes)
+  const proceedWithSubject = useCallback((subject: Subject) => {
     setSelectedSubject(subject);
     setSelectedChapter(null);
     setSelectedVideo(null);
@@ -124,6 +144,55 @@ export default function TopicView() {
         videoSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }, 100);
+  }, []);
+
+  const handleSelectSubject = useCallback(async (subject: Subject) => {
+    // Teachers and admins bypass the passcode entirely
+    if (role === "teacher" || role === "admin") {
+      proceedWithSubject(subject);
+      return;
+    }
+
+    const className = subject.class || "";
+    if (!className) {
+      proceedWithSubject(subject);
+      return;
+    }
+
+    // Resolve passcode — use preloaded map if ready, otherwise fetch directly
+    let storedPasscode: string | null | undefined;
+    if (passcodesLoaded) {
+      storedPasscode = classPasscodes[className] || null;
+    } else {
+      storedPasscode = await getClassPasscode(className);
+    }
+
+    if (!storedPasscode) {
+      // No passcode set for this class — allow free access
+      proceedWithSubject(subject);
+      return;
+    }
+
+    // Clear any currently-visible topic list immediately, then show modal
+    setSelectedSubject(null);
+    setSelectedChapter(null);
+    setSelectedVideo(null);
+    setPasscodeModal({ open: true, subject, className });
+  }, [role, proceedWithSubject, classPasscodes, passcodesLoaded]);
+
+  const handleVerifyPasscode = useCallback(async (entered: string): Promise<boolean> => {
+    const stored = await getClassPasscode(passcodeModal.className);
+    return stored === entered;
+  }, [passcodeModal.className]);
+
+  const handlePasscodeSuccess = useCallback(() => {
+    const subject = passcodeModal.subject;
+    setPasscodeModal({ open: false, subject: null, className: "" });
+    if (subject) proceedWithSubject(subject);
+  }, [passcodeModal, proceedWithSubject]);
+
+  const handlePasscodeCancel = useCallback(() => {
+    setPasscodeModal({ open: false, subject: null, className: "" });
   }, []);
 
   const handleSelectChapter = useCallback((chapterName: string) => {
@@ -191,6 +260,15 @@ export default function TopicView() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+
+      {/* Passcode Modal */}
+      <PasscodeModal
+        isOpen={passcodeModal.open}
+        className={passcodeModal.className}
+        onVerify={handleVerifyPasscode}
+        onSuccess={handlePasscodeSuccess}
+        onCancel={handlePasscodeCancel}
+      />
 
       <main className="container py-4 sm:py-6 md:py-8 px-4 space-y-6 sm:space-y-8">
         {/* Header with Back Button */}

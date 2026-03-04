@@ -7,7 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import CategoryView from "./pages/CategoryView";
 import TopicView from "./pages/TopicView";
-import Auth from "./pages/Auth";
+// import Auth from "./pages/Auth";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import AdminLogin from "./pages/AdminLogin";
@@ -29,7 +29,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/category/:category" element={<CategoryView />} />
             <Route path="/category/:category/topic/:topic" element={<TopicView />} />
-            <Route path="/auth" element={<Auth />} />
+            {/* <Route path="/auth" element={<Auth />} /> */}
             <Route path="/signup" element={<Signup />} />
             <Route path="/signin" element={<Signin />} />
             <Route path="/admin/login" element={<AdminLogin />} />

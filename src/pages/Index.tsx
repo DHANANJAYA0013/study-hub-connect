@@ -5,6 +5,7 @@ import { useVideoProgress } from "@/hooks/useVideoProgress";
 import { Header } from "@/components/lms/Header";
 import { CategoryGrid } from "@/components/lms/CategoryGrid";
 import { VideoStats } from "@/components/lms/VideoComponents";
+import { ClassPasscodeManager } from "@/components/lms/ClassPasscodeManager";
 import { subjects, Subject, Video } from "@/data/subjects";
 import { Loader2, BookOpen, Microscope, Code, TrendingUp, Award, Users, GraduationCap, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -339,6 +340,19 @@ export default function Index() {
             onSelectCategory={handleCategorySelect}
           />
         </section>
+
+        {/* Passcode Management — visible to teachers and admins only */}
+        {(role === "teacher" || role === "admin") && (
+          <section>
+            <div className="mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold mb-2">Manage Class Passcodes</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Control student access to each class with passcodes
+              </p>
+            </div>
+            <ClassPasscodeManager />
+          </section>
+        )}
       </main>
     </div>
   );

@@ -6,7 +6,7 @@ import {
   updateProfile,
   User as FirebaseUser
 } from 'firebase/auth';
-import { doc, setDoc, getDoc, getDocs, collection, deleteDoc, query, where, arrayUnion, increment } from 'firebase/firestore';
+import { doc, setDoc, getDoc, getDocs, collection, deleteDoc, query, where, arrayUnion, increment, writeBatch } from 'firebase/firestore';
 import { auth, db } from '@/config/firebase';
 
 export type AppRole = "admin" | "teacher" | "student";
@@ -496,6 +496,72 @@ export async function getUserDashboardData(userId: string) {
   }
 }
 
+// --- Class Passcode Management ---
+
+// Get passcode for a specific class (returns null if not set)
+export async function getClassPasscode(className: string): Promise<string | null> {
+  try {
+    const docSnap = await getDoc(doc(db, 'class_passcodes', className));
+    if (docSnap.exists()) return docSnap.data().passcode ?? null;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+// Get all class passcodes as a map { "Class 8": "pass123", ... }
+export async function getAllClassPasscodes(): Promise<Record<string, string>> {
+  try {
+    const snap = await getDocs(collection(db, 'class_passcodes'));
+    const result: Record<string, string> = {};
+    snap.docs.forEach(d => { result[d.id] = d.data().passcode ?? ''; });
+    return result;
+  } catch {
+    return {};
+  }
+}
+
+// Set or update the passcode for a class
+export async function setClassPasscode(className: string, passcode: string): Promise<void> {
+  try {
+    await setDoc(doc(db, 'class_passcodes', className), { passcode, updatedAt: new Date().toISOString() });
+  } catch (err: any) {
+    console.error('setClassPasscode error:', err);
+    throw new Error(err?.message ?? 'Firestore write failed');
+  }
+}
+
+// Remove the passcode for a class (makes it freely accessible)
+export async function removeClassPasscode(className: string): Promise<void> {
+  try {
+    // Keep the doc but clear the passcode so the class appears in the collection
+    await setDoc(doc(db, 'class_passcodes', className), { passcode: '', updatedAt: new Date().toISOString() });
+  } catch (err: any) {
+    console.error('removeClassPasscode error:', err);
+    throw new Error(err?.message ?? 'Firestore write failed');
+  }
+}
+
+// Initialize all classes in Firestore — creates a doc for each class that doesn't exist yet
+// Uses batch writes; never overwrites existing passcodes.
+export async function initializeClassPasscodes(classNames: string[]): Promise<void> {
+  try {
+    const batch = writeBatch(db);
+    let count = 0;
+    for (const cls of classNames) {
+      const ref = doc(db, 'class_passcodes', cls);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) {
+        batch.set(ref, { passcode: '', updatedAt: new Date().toISOString() });
+        count++;
+      }
+    }
+    if (count > 0) await batch.commit();
+  } catch (err) {
+    console.error('Failed to initialize class passcodes:', err);
+  }
+}
+
 export default {
   getSession,
   signUp,
@@ -514,4 +580,9 @@ export default {
   getAllVideoProgress,
   getCompletedVideoIds,
   getUserDashboardData,
+  getClassPasscode,
+  getAllClassPasscodes,
+  setClassPasscode,
+  removeClassPasscode,
+  initializeClassPasscodes,
 };
