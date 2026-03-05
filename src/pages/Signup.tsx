@@ -106,7 +106,7 @@ export default function Signup() {
     }
 
     setIsLoading(true);
-    const { error } = await signUp(email, password, fullName, role);
+    const { error, needsVerification } = await signUp(email, password, fullName, role);
     setIsLoading(false);
 
     if (error) {
@@ -115,6 +115,9 @@ export default function Signup() {
         title: "Sign up failed",
         description: error.message,
       });
+    } else if (needsVerification) {
+      // Firebase account created + verification email sent — go to verify page
+      navigate("/verify-email");
     } else {
       toast({
         title: "Signup request submitted!",

@@ -8,7 +8,7 @@ interface AuthContextType {
   session: Session | null;
   role: AppRole | null;
   loading: boolean;
-  signUp: (email: string, password: string, fullName: string, role: AppRole) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, fullName: string, role: AppRole) => Promise<{ error: Error | null; needsVerification?: boolean }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
@@ -62,8 +62,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               setRole('admin');
               setLoading(false);
               return;
+            } else if (!firebaseUser.emailVerified) {
+              // Email not verified yet — keep them signed in so VerifyEmail page can work.
+              // No role assigned; the app will show the verify-email flow.
+              const userData: User = {
+                id: firebaseUser.uid,
+                email: firebaseUser.email,
+                full_name: firebaseUser.displayName,
+                avatar_url: firebaseUser.photoURL,
+              };
+              setUser(userData);
+              setSession(null);
+              setRole(null);
+              setLoading(false);
+              return;
             } else {
-              // User authenticated but not in users collection (not approved by admin)
+              // Email verified but not approved by admin yet — sign them out.
               await api.signOut();
               setUser(null);
               setSession(null);
@@ -125,7 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => unsubscribe();
   }, [toast]);
 
-  const signUp = async (email: string, password: string, fullName: string, selectedRole: AppRole) => {
+  const signUp = async (email: string, password: string, fullName: string, selectedRole: AppRole): Promise<{ error: Error | null; needsVerification?: boolean }> => {
     try {
       const res = await api.signUp({ email, password, full_name: fullName, role: selectedRole });
       if (res.error) {
@@ -135,6 +149,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           variant: "destructive" 
         });
         return { error: new Error(res.error) };
+      }
+      
+      if (res.needsVerification) {
+        return { error: null, needsVerification: true };
       }
       
       toast({ 

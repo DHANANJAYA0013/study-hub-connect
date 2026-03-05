@@ -1,4 +1,4 @@
-import { GraduationCap, LogOut, User, Download, BarChart } from "lucide-react";
+import { GraduationCap, LogOut, User, Download, BarChart, KeyRound } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -82,6 +82,11 @@ export function Header() {
                   <Download className="mr-2 h-4 w-4" />
                   <span>My Downloads</span>
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/change-password")}>
+                  <KeyRound className="mr-2 h-4 w-4" />
+                  <span>Change Password</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={signOut} className="text-destructive focus:text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>

@@ -33,7 +33,7 @@ service cloud.firestore {
 
     // ── Signup requests ───────────────────────────────────────────────────────
     match /signup_requests/{requestId} {
-      // Anyone (even unauthenticated) can create a signup request
+      // Anyone can create a signup request (unauthenticated or authenticated)
       allow create: if true;
       // Only admins can read, update, or delete requests
       allow read, update, delete: if isAdmin();

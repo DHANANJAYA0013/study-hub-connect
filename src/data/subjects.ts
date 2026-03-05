@@ -212,9 +212,9 @@ export const subjects: Subject[] = [
     totalVideos: 15,
     videos: [
       // Ch 4 (3 videos)
-      { id: "c10-ch4-act1", title: "Ch 4 - Activity 4.1", description: "Maths activity for Ch 4", duration: "0:00", url: "", thumbnail: thumbnailImage, chapter: "Chapter 4", activity: "Activity 4.1", chapterName: "Chapter 4" },
-      { id: "c10-ch4-act2", title: "Ch 4 - Activity 4.2", description: "Maths activity for Ch 4", duration: "0:00", url: "", thumbnail: thumbnailImage, chapter: "Chapter 4", activity: "Activity 4.2", chapterName: "Chapter 4" },
-      { id: "c10-ch4-act3", title: "Ch 4 - Activity 4.3", description: "Maths activity for Ch 4", duration: "0:00", url: "", thumbnail: thumbnailImage, chapter: "Chapter 4", activity: "Activity 4.3", chapterName: "Chapter 4" },
+      { id: "c10-ch4-act1", title: "Ch 4 - Activity 4.1", description: "Maths activity for Ch 4", duration: "0:00", url: "https://res.cloudinary.com/djp98li7g/video/upload/v1772695448/Activity_4.1_cp_jfhmrh.mp4", thumbnail: thumbnailImage, chapter: "Chapter 4", activity: "Activity 4.1", chapterName: "Chapter 4" },
+      { id: "c10-ch4-act2", title: "Ch 4 - Activity 4.2", description: "Maths activity for Ch 4", duration: "0:00", url: "https://res.cloudinary.com/djp98li7g/video/upload/v1772695898/Activity_4.2_cp_ylog5p.mp4", thumbnail: thumbnailImage, chapter: "Chapter 4", activity: "Activity 4.2", chapterName: "Chapter 4" },
+      { id: "c10-ch4-act3", title: "Ch 4 - Activity 4.3", description: "Maths activity for Ch 4", duration: "0:00", url: "https://res.cloudinary.com/djp98li7g/video/upload/v1772695978/Activity_4.3_cp_u56qzh.mp4", thumbnail: thumbnailImage, chapter: "Chapter 4", activity: "Activity 4.3", chapterName: "Chapter 4" },
       // Ch 5 (2 videos)
       { id: "c10-ch5-act1", title: "Ch 5 - Activity 5.1", description: "Maths activity for Ch 5", duration: "0:00", url: "", thumbnail: thumbnailImage, chapter: "Chapter 5", activity: "Activity 5.1", chapterName: "Chapter 5" },
       { id: "c10-ch5-act2", title: "Ch 5 - Activity 5.2", description: "Maths activity for Ch 5", duration: "0:00", url: "", thumbnail: thumbnailImage, chapter: "Chapter 5", activity: "Activity 5.2", chapterName: "Chapter 5" },

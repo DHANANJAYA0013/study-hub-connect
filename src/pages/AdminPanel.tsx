@@ -62,6 +62,7 @@ interface UserData {
 
 interface SignupRequest {
   id: string;
+  uid: string;   // Firebase Auth UID — set after user verifies email
   email: string;
   full_name: string;
   role: string;
@@ -175,16 +176,24 @@ export default function AdminPanel() {
     }
 
     setProcessingRequest(request.id);
-    
-    try {
-      // Check if user already exists in users collection
-      const q = query(
-        collection(db, "users"),
-        where("email", "==", request.email)
-      );
-      const existingUser = await getDocs(q);
 
-      if (!existingUser.empty) {
+    try {
+      // Guard: new flow requires a uid (set after email verification)
+      if (!request.uid) {
+        toast({
+          variant: "destructive",
+          title: "Cannot approve this request",
+          description: "This request is from the old signup flow and has no associated account. Please reject it and ask the user to sign up again.",
+        });
+        setProcessingRequest(null);
+        return;
+      }
+
+      // Check the user is not already in the users collection
+      const existingSnap = await getDocs(
+        query(collection(db, "users"), where("email", "==", request.email))
+      );
+      if (!existingSnap.empty) {
         toast({
           variant: "destructive",
           title: "User already exists",
@@ -194,90 +203,32 @@ export default function AdminPanel() {
         return;
       }
 
-      // Get the full request data including password
-      const requestDoc = await getDoc(doc(db, "signup_requests", request.id));
-      if (!requestDoc.exists()) {
-        throw new Error("Signup request not found");
-      }
-      const requestData = requestDoc.data();
-
-      console.log("Creating Firebase Auth user for:", requestData.email);
-
-      // Create user in Firebase Auth using SECONDARY AUTH to avoid logging out admin
-      const userCredential = await createUserWithEmailAndPassword(
-        secondaryAuth,
-        requestData.email,
-        requestData.password
-      );
-
-      console.log("Firebase Auth user created with UID:", userCredential.user.uid);
-
-      const userId = userCredential.user.uid;
-
-      // Set the display name on the Firebase Auth user
-      if (requestData.full_name) {
-        await updateProfile(userCredential.user, {
-          displayName: requestData.full_name
-        });
-        console.log("Display name set:", requestData.full_name);
-      }
-
-      // Store user in users collection with the Firebase Auth UID
-      await setDoc(doc(db, "users", userId), {
-        email: requestData.email,
-        full_name: requestData.full_name || "",
-        role: requestData.role,
+      // Firebase Auth account already exists (created when user signed up).
+      // Just add the user to the users collection to grant them access.
+      await setDoc(doc(db, "users", request.uid), {
+        email: request.email,
+        full_name: request.full_name || "",
+        role: request.role,
         created_at: new Date().toISOString(),
         approved_at: new Date().toISOString(),
       });
 
-      console.log("User stored in Firestore with ID:", userId);
-
-      // Delete from signup_requests collection
+      // Remove the signup request
       await deleteDoc(doc(db, "signup_requests", request.id));
 
-      console.log("Signup request deleted");
-
-      // Sign out the newly created user from secondary auth
-      await firebaseSignOut(secondaryAuth);
-
       toast({
-        title: "Request approved successfully!",
+        title: "Request approved!",
         description: `${request.full_name} can now sign in with their credentials.`,
       });
 
-      // Navigate to users tab
       setActiveTab("users");
-
-      // Refresh lists
       await refreshUsersAndStats();
       await refreshRequests();
-      
     } catch (err: any) {
-      console.error("Error approving request:", err);
-      console.error("Error code:", err.code);
-      console.error("Error message:", err.message);
-      
-      let errorMessage = err?.message || "An error occurred";
-      let errorDetails = "";
-      
-      // Provide more user-friendly error messages
-      if (err.code === 'auth/email-already-in-use') {
-        errorMessage = "This email is already registered in Firebase Authentication.";
-        errorDetails = "The user may have already been approved or signed up directly.";
-      } else if (err.code === 'auth/weak-password') {
-        errorMessage = "The password is too weak. User needs to sign up with a stronger password.";
-        errorDetails = `Password must be at least 6 characters.`;
-      } else if (err.code === 'auth/invalid-email') {
-        errorMessage = "Invalid email address format.";
-      } else {
-        errorDetails = `Code: ${err.code || 'unknown'}`;
-      }
-      
       toast({
         variant: "destructive",
         title: "Error approving request",
-        description: `${errorMessage}${errorDetails ? ` (${errorDetails})` : ''}`,
+        description: err?.message || "An unexpected error occurred.",
       });
     } finally {
       setProcessingRequest(null);

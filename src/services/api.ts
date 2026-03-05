@@ -4,6 +4,11 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged,
   updateProfile,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  updatePassword,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
   User as FirebaseUser
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, getDocs, collection, deleteDoc, query, where, arrayUnion, increment, writeBatch } from 'firebase/firestore';
@@ -58,52 +63,154 @@ export async function getSession(): Promise<Session | null> {
   };
 }
 
-// Sign up new user - stores request for admin approval
+const PENDING_SIGNUP_KEY = 'studyhub_pending_signup';
+
+// Sign up new user:
+// 1. Creates Firebase Auth account
+// 2. Sends email verification
+// 3. Saves pending data to sessionStorage (no Firestore write needed yet)
+// 4. Signup request is written to Firestore only AFTER email is verified (via submitVerifiedSignupRequest)
 export async function signUp(payload: { 
   email: string; 
   password: string; 
   full_name?: string; 
   role: AppRole 
-}): Promise<{ session?: Session; error?: string }> {
+}): Promise<{ session?: Session; error?: string; needsVerification?: boolean }> {
   try {
-    // Check if user already exists in 'users' collection with the same email and role
-    const usersQuery = query(
-      collection(db, 'users'),
-      where('email', '==', payload.email),
-      where('role', '==', payload.role)
+    // Create Firebase Auth account (throws auth/email-already-in-use if duplicate)
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      payload.email,
+      payload.password
     );
-    const usersSnapshot = await getDocs(usersQuery);
-    
-    if (!usersSnapshot.empty) {
-      return { error: `A ${payload.role} account with this email already exists.` };
+    const userId = userCredential.user.uid;
+
+    // Set display name
+    if (payload.full_name) {
+      await updateProfile(userCredential.user, { displayName: payload.full_name });
     }
 
-    // Check if signup request already exists with the same email and role
-    const signupRequestsQuery = query(
-      collection(db, 'signup_requests'),
-      where('email', '==', payload.email),
-      where('role', '==', payload.role)
-    );
-    const requestsSnapshot = await getDocs(signupRequestsQuery);
-    
-    if (!requestsSnapshot.empty) {
-      return { error: `A signup request for ${payload.role} with this email is already pending approval.` };
+    // Send verification email with actionCodeSettings so Firebase knows the
+    // correct redirect URL. Without this, some Firebase projects silently drop
+    // the email or send it to spam with a broken link.
+    const actionCodeSettings = {
+      // After the user clicks the verification link they come back to /verify-email
+      url: `${window.location.origin}/verify-email`,
+      handleCodeInApp: false,
+    };
+
+    try {
+      await sendEmailVerification(userCredential.user, actionCodeSettings);
+    } catch (emailErr: any) {
+      // Auth account was created — don't roll back, but tell the user the email failed.
+      // They can use "Resend" on the next page.
+      console.error('sendEmailVerification failed:', emailErr?.code, emailErr?.message);
+      // Still continue to verify-email page; user can resend from there.
     }
 
-    // Store signup request in Firestore (not creating Firebase Auth user yet)
-    const requestId = `${Date.now()}_${payload.email.replace(/[^a-zA-Z0-9]/g, '_')}`;
-    await setDoc(doc(db, 'signup_requests', requestId), {
+    // Store pending signup data in sessionStorage — no Firestore write needed.
+    // submitVerifiedSignupRequest() will read this and create the signup_request after verification.
+    sessionStorage.setItem(PENDING_SIGNUP_KEY, JSON.stringify({
+      uid: userId,
       email: payload.email,
-      password: payload.password, // Store temporarily for admin approval
       full_name: payload.full_name || '',
       role: payload.role,
+      created_at: new Date().toISOString(),
+    }));
+
+    // Keep user signed in — VerifyEmail page needs auth.currentUser to reload & check emailVerified
+    return { needsVerification: true };
+  } catch (err: any) {
+    let message = err?.message ?? String(err);
+    if (err.code === 'auth/email-already-in-use') {
+      message = 'An account with this email already exists. Please sign in or use a different email.';
+    } else if (err.code === 'auth/weak-password') {
+      message = 'Password is too weak. Please use at least 6 characters.';
+    }
+    return { error: message };
+  }
+}
+
+// Called from VerifyEmail page when user clicks "I've verified my email".
+// Reloads Firebase user, confirms emailVerified, then creates the signup_request in Firestore for admin review.
+// Uses sessionStorage for pending data — no pending_verification collection needed.
+export async function submitVerifiedSignupRequest(): Promise<{ error?: string }> {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      return { error: 'Session expired. Please sign up again.' };
+    }
+
+    // Reload to get latest emailVerified flag from Firebase
+    await user.reload();
+    const freshUser = auth.currentUser!;
+
+    if (!freshUser.emailVerified) {
+      return { error: 'Your email has not been verified yet. Please click the link in the verification email first, then try again.' };
+    }
+
+    // Read pending data from sessionStorage
+    const raw = sessionStorage.getItem(PENDING_SIGNUP_KEY);
+    if (!raw) {
+      // Data missing (e.g. different browser/tab) — fallback to Firebase user data
+      // Still create the request with what we know
+      const requestId = `${Date.now()}_${freshUser.email!.replace(/[^a-zA-Z0-9]/g, '_')}`;
+      await setDoc(doc(db, 'signup_requests', requestId), {
+        uid: freshUser.uid,
+        email: freshUser.email,
+        full_name: freshUser.displayName || '',
+        role: 'student', // fallback role
+        status: 'pending',
+        created_at: new Date().toISOString(),
+      });
+      await firebaseSignOut(auth);
+      return {};
+    }
+
+    const data = JSON.parse(raw);
+
+    // Write signup request to Firestore (rules: allow create: if true)
+    const requestId = `${Date.now()}_${freshUser.email!.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    await setDoc(doc(db, 'signup_requests', requestId), {
+      uid: freshUser.uid,
+      email: freshUser.email,
+      full_name: data.full_name || freshUser.displayName || '',
+      role: data.role || 'student',
       status: 'pending',
       created_at: new Date().toISOString(),
     });
 
-    return { session: undefined }; // No session until admin approves
+    // Clear sessionStorage
+    sessionStorage.removeItem(PENDING_SIGNUP_KEY);
+
+    // Sign out — user must wait for admin approval before signing in
+    await firebaseSignOut(auth);
+
+    return {};
   } catch (err: any) {
     return { error: err?.message ?? String(err) };
+  }
+}
+
+// Resend verification email to the currently signed-in (unverified) user
+export async function resendVerificationEmail(): Promise<{ error?: string }> {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      return { error: 'No active session found. Please sign up again.' };
+    }
+    const actionCodeSettings = {
+      url: `${window.location.origin}/verify-email`,
+      handleCodeInApp: false,
+    };
+    await sendEmailVerification(user, actionCodeSettings);
+    return {};
+  } catch (err: any) {
+    let message = err?.message ?? String(err);
+    if (err.code === 'auth/too-many-requests') {
+      message = 'Too many requests. Please wait a few minutes before requesting another verification email.';
+    }
+    return { error: message };
   }
 }
 
@@ -562,6 +669,54 @@ export async function initializeClassPasscodes(classNames: string[]): Promise<vo
   }
 }
 
+// Send a password reset email via Firebase
+export async function sendPasswordReset(email: string): Promise<{ error?: string }> {
+  try {
+    await sendPasswordResetEmail(auth, email.trim());
+    return {};
+  } catch (err: any) {
+    let message = err?.message ?? String(err);
+    if (err.code === 'auth/user-not-found') {
+      message = 'No account found with this email address.';
+    } else if (err.code === 'auth/invalid-email') {
+      message = 'Invalid email address format.';
+    } else if (err.code === 'auth/too-many-requests') {
+      message = 'Too many requests. Please try again later.';
+    }
+    return { error: message };
+  }
+}
+
+// Change password for the currently signed-in user (requires re-authentication)
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string
+): Promise<{ error?: string }> {
+  try {
+    const user = auth.currentUser;
+    if (!user || !user.email) {
+      return { error: 'No authenticated user found. Please sign in again.' };
+    }
+    // Re-authenticate before changing password
+    const credential = EmailAuthProvider.credential(user.email, currentPassword);
+    await reauthenticateWithCredential(user, credential);
+    await updatePassword(user, newPassword);
+    return {};
+  } catch (err: any) {
+    let message = err?.message ?? String(err);
+    if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+      message = 'Current password is incorrect.';
+    } else if (err.code === 'auth/weak-password') {
+      message = 'New password is too weak. Use at least 6 characters.';
+    } else if (err.code === 'auth/too-many-requests') {
+      message = 'Too many attempts. Please try again later.';
+    } else if (err.code === 'auth/requires-recent-login') {
+      message = 'Session expired. Please sign out and sign in again before changing your password.';
+    }
+    return { error: message };
+  }
+}
+
 export default {
   getSession,
   signUp,
@@ -585,4 +740,8 @@ export default {
   setClassPasscode,
   removeClassPasscode,
   initializeClassPasscodes,
+  sendPasswordReset,
+  changePassword,
+  submitVerifiedSignupRequest,
+  resendVerificationEmail,
 };
