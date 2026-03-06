@@ -4,7 +4,6 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged,
   updateProfile,
-  sendEmailVerification,
   sendPasswordResetEmail,
   updatePassword,
   reauthenticateWithCredential,
@@ -63,156 +62,125 @@ export async function getSession(): Promise<Session | null> {
   };
 }
 
-const PENDING_SIGNUP_KEY = 'studyhub_pending_signup';
+// Send a 6-digit OTP to the given email via EmailJS.
+// Returns the generated OTP so the caller can validate it client-side.
+export async function sendEmailOTP(email: string): Promise<{ otp?: string; error?: string }> {
+  const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID as string | undefined;
+  const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string | undefined;
+  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string | undefined;
 
-// Sign up new user:
+  const isPlaceholder = (v?: string) =>
+    !v || v.startsWith('your-') || v === '' || v === 'undefined';
+
+  if (isPlaceholder(serviceId) || isPlaceholder(templateId) || isPlaceholder(publicKey)) {
+    return { error: 'Email service is not configured. Add your EmailJS credentials to the .env file and restart the dev server.' };
+  }
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  try {
+    const emailjs = await import('@emailjs/browser');
+    await emailjs.send(
+      serviceId!,
+      templateId!,
+      { to_email: email, otp_code: otp, app_name: 'StudyHub' },
+      publicKey!
+    );
+    return { otp };
+  } catch (err: any) {
+    const status = err?.status ?? err?.text ?? '';
+    const detail = err?.message ?? String(err);
+    console.error('EmailJS send failed:', err);
+    // Surface a human-readable reason when possible
+    if (String(status) === '400' || String(detail).toLowerCase().includes('service')) {
+      return { error: 'Invalid EmailJS Service ID. Check VITE_EMAILJS_SERVICE_ID in your .env file.' };
+    }
+    if (String(status) === '401' || String(detail).toLowerCase().includes('public key') || String(detail).toLowerCase().includes('origin')) {
+      return { error: 'Invalid EmailJS Public Key or unauthorized origin. Check VITE_EMAILJS_PUBLIC_KEY in your .env file.' };
+    }
+    if (String(detail).toLowerCase().includes('template')) {
+      return { error: 'Invalid EmailJS Template ID. Check VITE_EMAILJS_TEMPLATE_ID in your .env file.' };
+    }
+    return { error: `Failed to send verification email: ${detail || 'Unknown error'}` };
+  }
+}
+
+// Sign up new user (OTP already verified by the caller):
 // 1. Creates Firebase Auth account
-// 2. Sends email verification
-// 3. Saves pending data to sessionStorage (no Firestore write needed yet)
-// 4. Signup request is written to Firestore only AFTER email is verified (via submitVerifiedSignupRequest)
+// 2. Writes signup_request to Firestore for admin approval
+// 3. Signs the user out (they must wait for admin approval)
 export async function signUp(payload: { 
   email: string; 
   password: string; 
   full_name?: string; 
   role: AppRole 
-}): Promise<{ session?: Session; error?: string; needsVerification?: boolean }> {
+}): Promise<{ error?: string }> {
   try {
-    // Create Firebase Auth account (throws auth/email-already-in-use if duplicate)
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       payload.email,
       payload.password
     );
-    const userId = userCredential.user.uid;
 
-    // Set display name
     if (payload.full_name) {
       await updateProfile(userCredential.user, { displayName: payload.full_name });
     }
 
-    // Send verification email with actionCodeSettings so Firebase knows the
-    // correct redirect URL. Without this, some Firebase projects silently drop
-    // the email or send it to spam with a broken link.
-    const actionCodeSettings = {
-      // After the user clicks the verification link they come back to /verify-email
-      url: `${window.location.origin}/verify-email`,
-      handleCodeInApp: false,
-    };
-
-    try {
-      await sendEmailVerification(userCredential.user, actionCodeSettings);
-    } catch (emailErr: any) {
-      // Auth account was created — don't roll back, but tell the user the email failed.
-      // They can use "Resend" on the next page.
-      console.error('sendEmailVerification failed:', emailErr?.code, emailErr?.message);
-      // Still continue to verify-email page; user can resend from there.
-    }
-
-    // Store pending signup data in sessionStorage — no Firestore write needed.
-    // submitVerifiedSignupRequest() will read this and create the signup_request after verification.
-    sessionStorage.setItem(PENDING_SIGNUP_KEY, JSON.stringify({
-      uid: userId,
+    const requestId = `${Date.now()}_${payload.email.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    await setDoc(doc(db, 'signup_requests', requestId), {
+      uid: userCredential.user.uid,
       email: payload.email,
       full_name: payload.full_name || '',
       role: payload.role,
-      created_at: new Date().toISOString(),
-    }));
-
-    // Keep user signed in — VerifyEmail page needs auth.currentUser to reload & check emailVerified
-    return { needsVerification: true };
-  } catch (err: any) {
-    let message = err?.message ?? String(err);
-    if (err.code === 'auth/email-already-in-use') {
-      message = 'An account with this email already exists. Please sign in or use a different email.';
-    } else if (err.code === 'auth/weak-password') {
-      message = 'Password is too weak. Please use at least 6 characters.';
-    }
-    return { error: message };
-  }
-}
-
-// Called from VerifyEmail page when user clicks "I've verified my email".
-// Reloads Firebase user, confirms emailVerified, then creates the signup_request in Firestore for admin review.
-// Uses sessionStorage for pending data — no pending_verification collection needed.
-export async function submitVerifiedSignupRequest(): Promise<{ error?: string }> {
-  try {
-    const user = auth.currentUser;
-    if (!user) {
-      return { error: 'Session expired. Please sign up again.' };
-    }
-
-    // Reload to get latest emailVerified flag from Firebase
-    await user.reload();
-    const freshUser = auth.currentUser!;
-
-    if (!freshUser.emailVerified) {
-      return { error: 'Your email has not been verified yet. Please click the link in the verification email first, then try again.' };
-    }
-
-    // Read pending data from sessionStorage
-    const raw = sessionStorage.getItem(PENDING_SIGNUP_KEY);
-    if (!raw) {
-      // Data missing (e.g. different browser/tab) — fallback to Firebase user data
-      // Still create the request with what we know
-      const requestId = `${Date.now()}_${freshUser.email!.replace(/[^a-zA-Z0-9]/g, '_')}`;
-      await setDoc(doc(db, 'signup_requests', requestId), {
-        uid: freshUser.uid,
-        email: freshUser.email,
-        full_name: freshUser.displayName || '',
-        role: 'student', // fallback role
-        status: 'pending',
-        created_at: new Date().toISOString(),
-      });
-      await firebaseSignOut(auth);
-      return {};
-    }
-
-    const data = JSON.parse(raw);
-
-    // Write signup request to Firestore (rules: allow create: if true)
-    const requestId = `${Date.now()}_${freshUser.email!.replace(/[^a-zA-Z0-9]/g, '_')}`;
-    await setDoc(doc(db, 'signup_requests', requestId), {
-      uid: freshUser.uid,
-      email: freshUser.email,
-      full_name: data.full_name || freshUser.displayName || '',
-      role: data.role || 'student',
       status: 'pending',
       created_at: new Date().toISOString(),
     });
 
-    // Clear sessionStorage
-    sessionStorage.removeItem(PENDING_SIGNUP_KEY);
-
-    // Sign out — user must wait for admin approval before signing in
+    // Sign out immediately — user must wait for admin approval
     await firebaseSignOut(auth);
-
     return {};
   } catch (err: any) {
+    if (err.code === 'auth/email-already-in-use') {
+      // Check Firestore to give the most helpful message
+      try {
+        // 1. Already an approved user?
+        const usersSnap = await getDocs(query(collection(db, 'users'), where('email', '==', payload.email)));
+        if (!usersSnap.empty) {
+          return { error: 'An account with this email already exists. Please go to Sign In.' };
+        }
+        // 2. Already a pending request?
+        const reqSnap = await getDocs(query(collection(db, 'signup_requests'), where('email', '==', payload.email)));
+        if (!reqSnap.empty) {
+          return { error: 'A signup request for this email is already pending admin approval. Please wait for the admin to approve your account.' };
+        }
+        // 3. Firebase Auth account exists but no Firestore data — reuse the existing account
+        //    by signing in and writing the signup request.
+        const credential = await signInWithEmailAndPassword(auth, payload.email, payload.password);
+        const requestId = `${Date.now()}_${payload.email.replace(/[^a-zA-Z0-9]/g, '_')}`;
+        await setDoc(doc(db, 'signup_requests', requestId), {
+          uid: credential.user.uid,
+          email: payload.email,
+          full_name: payload.full_name || credential.user.displayName || '',
+          role: payload.role,
+          status: 'pending',
+          created_at: new Date().toISOString(),
+        });
+        await firebaseSignOut(auth);
+        return {};
+      } catch (innerErr: any) {
+        if (innerErr.code === 'auth/wrong-password' || innerErr.code === 'auth/invalid-credential') {
+          return { error: 'An account with this email already exists but the password is incorrect. Please sign in with your existing password or use a different email.' };
+        }
+        return { error: 'An account with this email already exists. Please sign in or use a different email.' };
+      }
+    }
+    if (err.code === 'auth/weak-password') {
+      return { error: 'Password is too weak. Please use at least 6 characters.' };
+    }
     return { error: err?.message ?? String(err) };
   }
 }
 
-// Resend verification email to the currently signed-in (unverified) user
-export async function resendVerificationEmail(): Promise<{ error?: string }> {
-  try {
-    const user = auth.currentUser;
-    if (!user) {
-      return { error: 'No active session found. Please sign up again.' };
-    }
-    const actionCodeSettings = {
-      url: `${window.location.origin}/verify-email`,
-      handleCodeInApp: false,
-    };
-    await sendEmailVerification(user, actionCodeSettings);
-    return {};
-  } catch (err: any) {
-    let message = err?.message ?? String(err);
-    if (err.code === 'auth/too-many-requests') {
-      message = 'Too many requests. Please wait a few minutes before requesting another verification email.';
-    }
-    return { error: message };
-  }
-}
 
 // Sign in existing user - verify user is in users collection
 export async function signIn(payload: { 
@@ -742,6 +710,5 @@ export default {
   initializeClassPasscodes,
   sendPasswordReset,
   changePassword,
-  submitVerifiedSignupRequest,
-  resendVerificationEmail,
+  sendEmailOTP,
 };
