@@ -42,15 +42,20 @@ export default function CategoryView() {
         color: "from-blue-500 to-indigo-600",
         description: "Scientific experiments and interactive activities"
       },
-      Box1: {
+      "Class 8": {
         icon: <BookOpen className="h-7 w-7 text-white" />,
         color: "from-orange-500 to-red-600",
-        description: "Experiential learning activities collection 1"
+        description: "Hands-on learning activities for Class 8 students"
       },
-      Box2: {
+      "Class 9": {
         icon: <BookOpen className="h-7 w-7 text-white" />,
         color: "from-pink-500 to-rose-600",
-        description: "Experiential learning activities collection 2"
+        description: "Hands-on learning activities for Class 9 students"
+      },
+      "Class 10": {
+        icon: <BookOpen className="h-7 w-7 text-white" />,
+        color: "from-violet-500 to-purple-600",
+        description: "Hands-on learning activities for Class 10 students"
       },
       Line: {
         icon: <Code className="h-7 w-7 text-white" />,

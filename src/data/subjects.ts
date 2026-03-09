@@ -123,7 +123,7 @@ export const subjects: Subject[] = [
     totalVideos: 1,
     videos: [
       // Chemical Reactions and Equations (1 video)
-      { id: "sci10-cre-v1", title: "Chemical Reactions and Equations - Video 1", description: "Types of chemical reactions and balancing equations", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Chemical Reactions and Equations" }
+      { id: "sci10-cre-v1", title: "Chemical Reactions and Equations - Video 1", description: "Types of chemical reactions and balancing equations", duration: "4:27", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1773038166/10.1.2_cp_cdbtwg.mp4", thumbnail: thumbnailImage, chapterName: "Chemical Reactions and Equations" }
     ]
   },
   
@@ -240,25 +240,39 @@ export const subjects: Subject[] = [
 
   // ========== ANUBHAV SECTION ==========
   {
-    id: "anubhav-box1",
-    name: "Anubhav - Box1",
+    id: "anubhav-class8",
+    name: "Class 8",
     icon: "BookOpen",
-    description: "Hands-on learning activities from Box1 collection",
+    description: "Hands-on learning activities for Class 8 students",
     color: "from-orange-500 to-red-600",
     section: "Anubhav",
-    topic: "Box1",
-    totalVideos: 0,
+    topic: "Class 8",
+    class: "Anubhav Class 8",
+    totalVideos: 5,
     videos: []
   },
   {
-    id: "anubhav-box2",
-    name: "Anubhav - Box2",
+    id: "anubhav-class9",
+    name: "Class 9",
     icon: "BookOpen",
-    description: "Hands-on learning activities from Box2 collection",
+    description: "Hands-on learning activities for Class 9 students",
     color: "from-pink-500 to-rose-600",
     section: "Anubhav",
-    topic: "Box2",
-    totalVideos: 0,
+    topic: "Class 9",
+    class: "Anubhav Class 9",
+    totalVideos: 4,
+    videos: []
+  },
+  {
+    id: "anubhav-class10",
+    name: "Class 10",
+    icon: "BookOpen",
+    description: "Hands-on learning activities for Class 10 students",
+    color: "from-violet-500 to-purple-600",
+    section: "Anubhav",
+    topic: "Class 10",
+    class: "Anubhav Class 10",
+    totalVideos: 4,
     videos: []
   },
 
