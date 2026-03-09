@@ -41,28 +41,28 @@ export const subjects: Subject[] = [
     totalVideos: 17,
     videos: [
       // Combustion and Flames (5 videos)
-      { id: "sci8-caf-v1", title: "Combustion and Flames - Video 1", description: "Introduction to combustion and types of combustion", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Combustion and Flames" },
-      { id: "sci8-caf-v2", title: "Combustion and Flames - Video 2", description: "Conditions necessary for combustion", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Combustion and Flames" },
-      { id: "sci8-caf-v3", title: "Combustion and Flames - Video 3", description: "Flame structure and zones", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Combustion and Flames" },
-      { id: "sci8-caf-v4", title: "Combustion and Flames - Video 4", description: "Fuel and calorific value", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Combustion and Flames" },
-      { id: "sci8-caf-v5", title: "Combustion and Flames - Video 5", description: "Fire control and fire extinguishers", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Combustion and Flames" },
+      { id: "sci8-caf-v1", title: "Combustion and Flames - Video 1", description: "Introduction to combustion and types of combustion", duration: "2:06", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772695240/Activity_8.4.1_cp_qzz8mv.mp4", thumbnail: thumbnailImage, chapterName: "Combustion and Flames" },
+      { id: "sci8-caf-v2", title: "Combustion and Flames - Video 2", description: "Conditions necessary for combustion", duration: "2:13", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772695777/Activity_8.4.2_cp_vfk7gd.mp4", thumbnail: thumbnailImage, chapterName: "Combustion and Flames" },
+      { id: "sci8-caf-v3", title: "Combustion and Flames - Video 3", description: "Flame structure and zones", duration: "2:05", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772695777/Activity_8.4.3_cp_x41vxt.mp4", thumbnail: thumbnailImage, chapterName: "Combustion and Flames" },
+      { id: "sci8-caf-v4", title: "Combustion and Flames - Video 4", description: "Fuel and calorific value", duration: "3:42", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772695779/Activity_8.4.4Mp4_cp_sln8bn.mp4", thumbnail: thumbnailImage, chapterName: "Combustion and Flames" },
+      { id: "sci8-caf-v5", title: "Combustion and Flames - Video 5", description: "Fire control and fire extinguishers", duration: "2:32", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772695780/Activity_8.4.5_1_cp_zcvjrq.mp4", thumbnail: thumbnailImage, chapterName: "Combustion and Flames" },
       // Force and Pressure (2 videos)
-      { id: "sci8-fap-v1", title: "Force and Pressure - Video 1", description: "Understanding force and its effects", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Force and Pressure" },
-      { id: "sci8-fap-v2", title: "Force and Pressure - Video 2", description: "Pressure and its applications", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Force and Pressure" },
+      { id: "sci8-fap-v1", title: "Force and Pressure - Video 1", description: "Understanding force and its effects", duration: "2:11", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772696068/Activity_8.6.1_cp_vyngel.mp4", thumbnail: thumbnailImage, chapterName: "Force and Pressure" },
+      { id: "sci8-fap-v2", title: "Force and Pressure - Video 2", description: "Pressure and its applications", duration: "2:42", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772696085/Activity_8.6.2_cp_vjcusz.mp4", thumbnail: thumbnailImage, chapterName: "Force and Pressure" },
       // Friction (3 videos)
-      { id: "sci8-fri-v1", title: "Friction - Video 1", description: "Introduction to friction and its types", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Friction" },
-      { id: "sci8-fri-v2", title: "Friction - Video 2", description: "Factors affecting friction", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Friction" },
-      { id: "sci8-fri-v3", title: "Friction - Video 3", description: "Advantages and disadvantages of friction", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Friction" },
+      { id: "sci8-fri-v1", title: "Friction - Video 1", description: "Introduction to friction and its types", duration: "4:02", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772696310/Activity_8.7.1_cp_ypgurh.mp4", thumbnail: thumbnailImage, chapterName: "Friction" },
+      { id: "sci8-fri-v2", title: "Friction - Video 2", description: "Factors affecting friction", duration: "1:51", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772696302/Activity_8.7.2_cp_zcp9j1.mp4", thumbnail: thumbnailImage, chapterName: "Friction" },
+      { id: "sci8-fri-v3", title: "Friction - Video 3", description: "Advantages and disadvantages of friction", duration: "1:51", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772696304/Activity_8.7.3_cp_xftttx.mp4", thumbnail: thumbnailImage, chapterName: "Friction" },
       // Light (3 videos)
-      { id: "sci8-lgt-v1", title: "Light - Video 1", description: "Introduction to light and reflection", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Light" },
-      { id: "sci8-lgt-v2", title: "Light - Video 2", description: "Laws of reflection and mirrors", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Light" },
-      { id: "sci8-lgt-v3", title: "Light - Video 3", description: "Dispersion of light", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Light" },
+      { id: "sci8-lgt-v1", title: "Light - Video 1", description: "Introduction to light and reflection", duration: "1:52", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772696738/Activity_8.10.1_cp_ekxa4c.mp4", thumbnail: thumbnailImage, chapterName: "Light" },
+      { id: "sci8-lgt-v2", title: "Light - Video 2", description: "Laws of reflection and mirrors", duration: "3:42", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772696744/Activity_8.10.2_cp_h7hdlm.mp4", thumbnail: thumbnailImage, chapterName: "Light" },
+      { id: "sci8-lgt-v3", title: "Light - Video 3", description: "Dispersion of light", duration: "2:08", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772696738/Activity_8.10.3_cp_sxobru.mp4", thumbnail: thumbnailImage, chapterName: "Light" },
       // Sound (3 videos)
-      { id: "sci8-snd-v1", title: "Sound - Video 1", description: "Production and propagation of sound", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Sound" },
-      { id: "sci8-snd-v2", title: "Sound - Video 2", description: "Characteristics of sound", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Sound" },
-      { id: "sci8-snd-v3", title: "Sound - Video 3", description: "Human ear and sound pollution", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Sound" },
+      { id: "sci8-snd-v1", title: "Sound - Video 1", description: "Production and propagation of sound", duration: "1:52", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772696887/Activity_8.8.1_cp_ywuvkt.mp4", thumbnail: thumbnailImage, chapterName: "Sound" },
+      { id: "sci8-snd-v2", title: "Sound - Video 2", description: "Characteristics of sound", duration: "3:09", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772696892/8.8.2_cp_igqrzs.mp4", thumbnail: thumbnailImage, chapterName: "Sound" },
+      { id: "sci8-snd-v3", title: "Sound - Video 3", description: "Human ear and sound pollution", duration: "1:39", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772696887/Activity_8.8.3_cp_qbnxms.mp4", thumbnail: thumbnailImage, chapterName: "Sound" },
       // Synthetic Fibres and Plastics (1 video)
-      { id: "sci8-sfp-v1", title: "Synthetic Fibres and Plastics - Video 1", description: "Types of synthetic fibres and plastics", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Synthetic Fibres and Plastics" }
+      { id: "sci8-sfp-v1", title: "Synthetic Fibres and Plastics - Video 1", description: "Types of synthetic fibres and plastics", duration: "3:46", url: "https://res.cloudinary.com/dlcbfz8z1/video/upload/v1772697049/8.3.1_cp_tcsagx.mp4", thumbnail: thumbnailImage, chapterName: "Synthetic Fibres and Plastics" }
     ]
   },
   {
