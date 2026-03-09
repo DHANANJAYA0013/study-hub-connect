@@ -77,38 +77,40 @@ export const subjects: Subject[] = [
     totalVideos: 20,
     videos: [
       // Atoms and Molecules (1 video)
-      { id: "sci9-atm-v1", title: "Atoms and Molecules - Video 1", description: "Introduction to atoms and molecules", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Atoms and Molecules" },
+      
       // Force and Laws of Motion (3 videos)
-      { id: "sci9-flm-v1", title: "Force and Laws of Motion - Video 1", description: "Newton's first law of motion", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Force and Laws of Motion" },
-      { id: "sci9-flm-v2", title: "Force and Laws of Motion - Video 2", description: "Newton's second law of motion", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Force and Laws of Motion" },
-      { id: "sci9-flm-v3", title: "Force and Laws of Motion - Video 3", description: "Newton's third law and conservation of momentum", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Force and Laws of Motion" },
+      { id: "sci9-flm-v1", title: "Activity 9.8.1 - Demonstrating Newton’S First Law Using An Inertia Apparatus", description: "Newton's first law of motion", duration: "1:56", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772695261/Activity_9.8.1_-_Demonstrating_Newton_S_First_Law_Using_An_Inertia_Apparatus_cxeuji.mp4", thumbnail: thumbnailImage, chapterName: "Force and Laws of Motion" },
+      { id: "sci9-flm-v2", title: "Activity 9.8.2", description: "Newton's second law of motion", duration: "2:34", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772696174/Activity_9.8.3_oo4q0k.mp4", thumbnail: thumbnailImage, chapterName: "Force and Laws of Motion" },
+      { id: "sci9-flm-v3", title: "Activity 9.8.3 - Demonstrating Newton’S Third Law Using A Balloon And Straw", description: "Newton's third law and conservation of momentum", duration: "2:02", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772695947/Activity_9.8.2_-_Demonstrating_Newton_S_Third_Law_Using_A_Balloon_And_Straw_sb3jho.mp4", thumbnail: thumbnailImage, chapterName: "Force and Laws of Motion" },
       // Gravitation (1 video)
-      { id: "sci9-grv-v1", title: "Gravitation - Video 1", description: "Universal law of gravitation", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Gravitation" },
+      { id: "sci9-grv-v1", title: "Activity 9.9.2", description: "Universal law of gravitation", duration: "2:16", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772696314/Activity_9.9.2_cp_ppib78.mp4", thumbnail: thumbnailImage, chapterName: "Gravitation" },
       // Is Matter Around Us Pure (1 video)
-      { id: "sci9-imp-v1", title: "Is Matter Around Us Pure - Video 1", description: "Pure substances and mixtures", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Is Matter Around Us Pure" },
+      { id: "sci9-imp-v1", title: "Activity 9.2.1", description: "Pure substances and mixtures", duration: "2:48", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772696988/Activity_9.2.1_cp_ua1vc5.mp4", thumbnail: thumbnailImage, chapterName: "Is Matter Around Us Pure" },
       // Matter in Our Surroundings (3 videos)
-      { id: "sci9-mos-v1", title: "Matter in Our Surroundings - Video 1", description: "States of matter", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Matter in Our Surroundings" },
-      { id: "sci9-mos-v2", title: "Matter in Our Surroundings - Video 2", description: "Interconversion of states of matter", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Matter in Our Surroundings" },
-      { id: "sci9-mos-v3", title: "Matter in Our Surroundings - Video 3", description: "Evaporation and its factors", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Matter in Our Surroundings" },
+      
+      { id: "sci9-mos-v2", title: "Activity 9.1.2 Observing Evaporation And Sublimation", description: "Interconversion of states of matter", duration: "2:11", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772697077/Activity_9.1.2_Observing_Evaporation_And_Sublimation_cp_oeknob.mp4", thumbnail: thumbnailImage, chapterName: "Matter in Our Surroundings" },
+      { id: "sci9-mos-v3", title: "Activity 9.1.3 - Effect Of Heat On Change In Boiling Points Of Pure Liquid And Saturated Salt Solution", description: "Evaporation and its factors", duration: "3:07", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772697138/Activity_9.1.3_-_Effect_Of_Heat_On_Change_In_Boiling_Points_Of_Pure_Liquid_And_Saturated_Salt_Solution_cp_dzuqv6.mp4", thumbnail: thumbnailImage, chapterName: "Matter in Our Surroundings" },
       // Motion (2 videos)
-      { id: "sci9-mot-v1", title: "Motion - Video 1", description: "Distance, displacement and speed", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Motion" },
-      { id: "sci9-mot-v2", title: "Motion - Video 2", description: "Acceleration and equations of motion", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Motion" },
+      { id: "sci9-mot-v1", title: "Activity 9.7.1 - Observing Circular Motion" , description: "Distance, displacement and speed", duration: "1:49", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772697199/Activity_9.7.1_-_Observing_Circular_Motion_cp_kw2nyw.mp4", thumbnail: thumbnailImage, chapterName: "Motion" },
+      { id: "sci9-mot-v2", title: "Activity 9.7.2.Demonstrating Motion", description: "Acceleration and equations of motion", duration: "1:54", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772697776/Activity_9.7.2.Demonstrating_Motion_cp_eqcuzy.mp4", thumbnail: thumbnailImage, chapterName: "Motion" },
       // Natural Resources (1 video)
-      { id: "sci9-nrs-v1", title: "Natural Resources - Video 1", description: "Air, water and soil resources", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Natural Resources" },
+      { id: "sci9-nrs-v1", title: "Activity 9.12.1", description: "Air, water and soil resources", duration: "3:39", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772697854/9.12.1_cp_pswwl3.mp4", thumbnail: thumbnailImage, chapterName: "Natural Resources" },
       // Sound (2 videos)
-      { id: "sci9-snd-v1", title: "Sound - Video 1", description: "Nature and propagation of sound", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Sound" },
-      { id: "sci9-snd-v2", title: "Sound - Video 2", description: "Reflection of sound and echo", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Sound" },
+      { id: "sci9-snd-v1", title: "Activity 9.11.1" , description: "Nature and propagation of sound", duration: "2:20", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772697930/Activity_9.11.1_cp_nwcptj.mp4", thumbnail: thumbnailImage, chapterName: "Sound" },
+      { id: "sci9-snd-v2", title: "Activity 9.11.2" , description: "Reflection of sound and echo", duration: "2:00", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772697982/Activity_9.11.3_cp_p3qro5.mp4", thumbnail: thumbnailImage, chapterName: "Sound" },
       // Structure of Atom (2 videos)
-      { id: "sci9-soa-v1", title: "Structure of Atom - Video 1", description: "Thomson and Rutherford models", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Structure of Atom" },
-      { id: "sci9-soa-v2", title: "Structure of Atom - Video 2", description: "Bohr's model and electronic configuration", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Structure of Atom" },
+      { id: "sci9-soa-v1", title: "Activity 9.4.1", description: "Thomson and Rutherford models", duration: "3:03", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772698043/Activity_9.4.1_cp_zixuka.mp4", thumbnail: thumbnailImage, chapterName: "Structure of Atom" },
+      { id: "sci9-soa-v2", title: "Activity 9.4.2", description: "Bohr's model and electronic configuration", duration: "1:59", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772698093/Activity_9.4.2_cp_dkxrcr.mp4", thumbnail: thumbnailImage, chapterName: "Structure of Atom" },
       // The Fundamental Unit of Life (1 video)
-      { id: "sci9-ful-v1", title: "The Fundamental Unit of Life - Video 1", description: "Cell structure and organelles", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "The Fundamental Unit of Life" },
+     
       // Work and Energy (3 videos)
-      { id: "sci9-wae-v1", title: "Work and Energy - Video 1", description: "Concept of work and conditions", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Work and Energy" },
-      { id: "sci9-wae-v2", title: "Work and Energy - Video 2", description: "Kinetic and potential energy", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Work and Energy" },
-      { id: "sci9-wae-v3", title: "Work and Energy - Video 3", description: "Law of conservation of energy", duration: "0:00", url: "", thumbnail: thumbnailImage, chapterName: "Work and Energy" }
+      { id: "sci9-wae-v1", title: "Activity 9.10.1", description: "Concept of work and conditions", duration: "2:21", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772698191/Activity_9.10.1_esrtvi.mp4", thumbnail: thumbnailImage, chapterName: "Work and Energy" },
+      { id: "sci9-wae-v2", title: "Activity 9.10.2", description: "Kinetic and potential energy", duration: "2:22", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772698247/Activity_9.10.2_vnohfb.mp4", thumbnail: thumbnailImage, chapterName: "Work and Energy" },
+      { id: "sci9-wae-v3", title: "Activity 9.10.3", description: "Law of conservation of energy", duration: "1:51", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1772698306/Activity_9.10.3_cp_exogz4.mp4", thumbnail: thumbnailImage, chapterName: "Work and Energy" }
     ]
   },
+
+
   {
     id: "Prastuti-science-10",
     name: "Class 10",
