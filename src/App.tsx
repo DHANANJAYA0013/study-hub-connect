@@ -13,9 +13,10 @@ import Signin from "./pages/Signin";
 import AdminLogin from "./pages/AdminLogin";
 import AdminPanel from "./pages/AdminPanel";
 import MyDownloads from "./pages/MyDownloads";
-import UserDashboard from "./pages/UserDashboard";
+// import UserDashboard from "./pages/UserDashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ChangePassword from "./pages/ChangePassword";
+import ResetPassword from "./pages/ResetPassword";
 import VerifyEmail from "./pages/VerifyEmail";
 import NotFound from "./pages/NotFound";
 
@@ -38,8 +39,9 @@ const App = () => (
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/downloads" element={<MyDownloads />} />
-            <Route path="/dashboard" element={<UserDashboard />} />
+            {/* <Route path="/dashboard" element={<UserDashboard />} /> */}
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="*" element={<NotFound />} />

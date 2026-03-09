@@ -136,7 +136,8 @@ export const subjects: Subject[] = [
     topic: "Maths",
     class: "Class 8",
     totalVideos: 19,
-    videos: [
+    videos: 
+    [
       // Ch 2 (2 videos)
       { id: "c8-ch2-act1", title: "Ch 2 - Activity 2.1", description: "Maths activity for Ch 2", duration: "0:14", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766758/CLASS_8_CHAPTER_2_Actvity_2.1_-_Experimind_LABS_fzq8br.mp4", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.1", chapterName: "Chapter 2" },
       { id: "c8-ch2-act2", title: "Ch 2 - Activity 2.2", description: "Maths activity for Ch 2", duration: "0:12", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766760/CLASS_8_CHAPTER_2_Actvity_2.2_-_Experimind_LABS_zaq8qo.mp4", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.2", chapterName: "Chapter 2" },
