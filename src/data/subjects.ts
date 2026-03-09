@@ -141,68 +141,71 @@ export const subjects: Subject[] = [
     videos: 
     [
       // Ch 2 (2 videos)
-      { id: "c8-ch2-act1", title: "Ch 2 - Activity 2.1", description: "Maths activity for Ch 2", duration: "0:14", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766758/CLASS_8_CHAPTER_2_Actvity_2.1_-_Experimind_LABS_fzq8br.mp4", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.1", chapterName: "Chapter 2" },
-      { id: "c8-ch2-act2", title: "Ch 2 - Activity 2.2", description: "Maths activity for Ch 2", duration: "0:12", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766760/CLASS_8_CHAPTER_2_Actvity_2.2_-_Experimind_LABS_zaq8qo.mp4", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.2", chapterName: "Chapter 2" },
+      { id: "c8-ch2-act1", title: "Ch 2 - Activity 2.1", description: "Maths activity for Ch 2", duration: "2:06", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772695583/Actvity_2.1_cp_le24ik.mp4", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.1", chapterName: "Chapter 2" },
+      { id: "c8-ch2-act2", title: "Ch 2 - Activity 2.2", description: "Maths activity for Ch 2", duration: "1:42", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772700173/Actvity_2.2_cp_abtlbr.mp4", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.2", chapterName: "Chapter 2" },
       // Ch 3 (2 videos)
-      { id: "c8-ch3-act1", title: "Ch 3 - Activity 3.1", description: "Maths activity for Ch 3", duration: "0:15", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766788/CLASS_8_CHAPTER_3_Activity_3.1_-_Experimind_LABS_s1dbta.mp4", thumbnail: thumbnailImage, chapter: "Chapter 3", activity: "Activity 3.1", chapterName: "Chapter 3" },
-      { id: "c8-ch3-act5", title: "Ch 3 - Activity 3.5", description: "Maths activity for Ch 3", duration: "0:05", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766762/CLASS_8_CHAPTER_3_Activity_3.5_-_Experimind_LABS_qwtdsb.mp4", thumbnail: thumbnailImage, chapter: "Chapter 3", activity: "Activity 3.5", chapterName: "Chapter 3" },
+      { id: "c8-ch3-act1", title: "Ch 3 - Activity 3.1", description: "Maths activity for Ch 3", duration: "1:44", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772700789/Activity_3.1_cp_eyqbvc.mp4", thumbnail: thumbnailImage, chapter: "Chapter 3", activity: "Activity 3.1", chapterName: "Chapter 3" },
+      { id: "c8-ch3-act5", title: "Ch 3 - Activity 3.5", description: "Maths activity for Ch 3", duration: "1:17", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772700867/Activity_3.5_cp_uwswza.mp4", thumbnail: thumbnailImage, chapter: "Chapter 3", activity: "Activity 3.5", chapterName: "Chapter 3" },
       // Ch 5 (3 videos)
-      { id: "c8-ch4-act1", title: "Ch 5 - Activity 5.1", description: "Maths activity for Ch 5", duration: "0:48", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766773/CLASS_8_CHAPTER_4_Activity_4.1_-_Experimind_LABS_eugu1z.mp4", thumbnail: thumbnailImage, chapter: "Chapter 5", activity: "Activity 5.1", chapterName: "Chapter 5" },
-      { id: "c8-ch4-act2", title: "Ch 5 - Activity 5.2", description: "Maths activity for Ch 5", duration: "1:47", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766782/CLASS_8_CHAPTER_4_Activity_4.2_-_Experimind_LABS_itdsi7.mp4", thumbnail: thumbnailImage, chapter: "Chapter 5", activity: "Activity 5.2", chapterName: "Chapter 5" },
-      { id: "c8-ch4-act3", title: "Ch 5 - Activity 5.3", description: "Maths activity for Ch 5", duration: "4:03", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766767/class_8_chapter_4_activity_4.3_kzowls.mp4", thumbnail: thumbnailImage, chapter: "Chapter 5", activity: "Activity 5.3", chapterName: "Chapter 5" },
+      { id: "c8-ch4-act1", title: "Ch 5 - Activity 5.1", description: "Maths activity for Ch 5", duration: "3:52", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772701035/Activity_5.1_cp_yfhei7.mp4", thumbnail: thumbnailImage, chapter: "Chapter 5", activity: "Activity 5.1", chapterName: "Chapter 5" },
+      { id: "c8-ch4-act3", title: "Ch 5 - Activity 5.3", description: "Maths activity for Ch 5", duration: "4:03", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772701102/Activity_5.3_cp_svagrt.mp4", thumbnail: thumbnailImage, chapter: "Chapter 5", activity: "Activity 5.3", chapterName: "Chapter 5" },
       // Ch 9 (6 videos)
-      { id: "c8-ch8-act1", title: "Ch 9 - Activity 9.1", description: "Maths activity for Ch 9", duration: "2:52", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766775/class_8_chapter_8_activity_8.1_fcvdpx.mp4", thumbnail: thumbnailImage, chapter: "Chapter 9", activity: "Activity 9.1", chapterName: "Chapter 9" },
-      { id: "c8-ch8-act2", title: "Ch 9 - Activity 9.2", description: "Maths activity for Ch 9", duration: "3:36", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766771/class_8_chapter_8_activity_8.2_iujzth.mp4", thumbnail: thumbnailImage, chapter: "Chapter 9", activity: "Activity 9.2", chapterName: "Chapter 9" },
-      { id: "c8-ch8-act3", title: "Ch 9 - Activity 9.3", description: "Maths activity for Ch 9", duration: "3:58", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766769/class_8_chapter_8_activity_8.3_d4d1bm.mp4", thumbnail: thumbnailImage, chapter: "Chapter 9", activity: "Activity 9.3", chapterName: "Chapter 9" },
-      { id: "c8-ch8-act4", title: "Ch 9 - Activity 9.4", description: "Maths activity for Ch 9", duration: "2:30", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766771/class_8_chapter_8_activity_8.4_iujzth.mp4", thumbnail: thumbnailImage, chapter: "Chapter 9", activity: "Activity 9.4", chapterName: "Chapter 9" },
-      { id: "c8-ch8-act5", title: "Ch 9 - Activity 9.5", description: "Maths activity for Ch 9", duration: "2:36", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766755/class_8_chapter_8_activity_8.5_qtytpg.mp4", thumbnail: thumbnailImage, chapter: "Chapter 9", activity: "Activity 9.5", chapterName: "Chapter 9" },
-      { id: "c8-ch8-act6", title: "Ch 9 - Activity 9.6", description: "Maths activity for Ch 9", duration: "2:36", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766765/CLASS_8_CHAPTER_8_Activity_8.6_tf1tfi.mp4", thumbnail: thumbnailImage, chapter: "Chapter 9", activity: "Activity 9.6", chapterName: "Chapter 9" },
+      { id: "c8-ch8-act1", title: "Ch 9 - Activity 9.1", description: "Maths activity for Ch 9", duration: "2:52", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772701302/Activity_9.1_cp_dfn8xw.mp4", thumbnail: thumbnailImage, chapter: "Chapter 9", activity: "Activity 9.1", chapterName: "Chapter 9" },
+      { id: "c8-ch8-act2", title: "Ch 9 - Activity 9.2", description: "Maths activity for Ch 9", duration: "3:36", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772701433/Activity_9.2_cp_zw3epu.mp4", thumbnail: thumbnailImage, chapter: "Chapter 9", activity: "Activity 9.2", chapterName: "Chapter 9" },
+      { id: "c8-ch8-act3", title: "Ch 9 - Activity 9.3", description: "Maths activity for Ch 9", duration: "3:58", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772701498/Activity_9.3_cp_dfq6ij.mp4", thumbnail: thumbnailImage, chapter: "Chapter 9", activity: "Activity 9.3", chapterName: "Chapter 9" },
+      { id: "c8-ch8-act4", title: "Ch 9 - Activity 9.4", description: "Maths activity for Ch 9", duration: "2:29", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772701516/Activity_9.4_cp_kmuz8i.mp4", thumbnail: thumbnailImage, chapter: "Chapter 9", activity: "Activity 9.4", chapterName: "Chapter 9" },
+      { id: "c8-ch8-act5", title: "Ch 9 - Activity 9.5", description: "Maths activity for Ch 9", duration: "2:36", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772701525/Activity_9.5_cp_hzxrj6.mp4", thumbnail: thumbnailImage, chapter: "Chapter 9", activity: "Activity 9.5", chapterName: "Chapter 9" },
+      { id: "c8-ch8-act6", title: "Ch 9 - Activity 9.6", description: "Maths activity for Ch 9", duration: "2:36", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772701533/Activity_9.6_cp_hvgz9q.mp4", thumbnail: thumbnailImage, chapter: "Chapter 9", activity: "Activity 9.6", chapterName: "Chapter 9" },
       // Ch 11 (1 video)
-      { id: "c8-ch9-act1", title: "Ch 11 - Activity 11.1", description: "Maths activity for Ch 11", duration: "2:08", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766754/CLASS_8_CHAPTER_9_Activity_9.1_pxetke.mp4", thumbnail: thumbnailImage, chapter: "Chapter 11", activity: "Activity 11.1", chapterName: "Chapter 11" },
+      { id: "c8-ch9-act1", title: "Ch 11 - Activity 11.1", description: "Maths activity for Ch 11", duration: "2:08", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772702315/Activity_11.1_cp_nkrd8c.mp4", thumbnail: thumbnailImage, chapter: "Chapter 11", activity: "Activity 11.1", chapterName: "Chapter 11" },
       // Ch 14 (2 videos)
-      { id: "c8-ch12-act1", title: "Ch 14 - Activity 14.1", description: "Maths activity for Ch 14", duration: "4:38", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766755/CLASS_8_CHAPTER_12_Activity_12.1_ie77n5.mp4", thumbnail: thumbnailImage, chapter: "Chapter 14", activity: "Activity 14.1", chapterName: "Chapter 14" },
-      { id: "c8-ch12-act2", title: "Ch 14 - Activity 14.2", description: "Maths activity for Ch 14", duration: "4:57", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766754/CLASS_8_CHAPTER_12_Activity_12.2_ivwyjt.mp4", thumbnail: thumbnailImage, chapter: "Chapter 14", activity: "Activity 14.2", chapterName: "Chapter 14" },
+      { id: "c8-ch12-act1", title: "Ch 14 - Activity 14.1", description: "Maths activity for Ch 14", duration: "4:38", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772702483/Activity_14.1_cp_vfhwev.mp4", thumbnail: thumbnailImage, chapter: "Chapter 14", activity: "Activity 14.1", chapterName: "Chapter 14" },
+      { id: "c8-ch12-act2", title: "Ch 14 - Activity 14.2", description: "Maths activity for Ch 14", duration: "4:57", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772702496/Activity_14.2_cp_rja1n5.mp4", thumbnail: thumbnailImage, chapter: "Chapter 14", activity: "Activity 14.2", chapterName: "Chapter 14" },
       // Ch 15 (3 videos)
-      { id: "c8-ch13-act1", title: "Ch 15 - Activity 15.1", description: "Maths activity for Ch 15", duration: "4:48", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766772/CLASS_8_CHAPTER_13_Activity_13.1_ndycrh.mp4", thumbnail: thumbnailImage, chapter: "Chapter 15", activity: "Activity 15.1", chapterName: "Chapter 15" },
-      { id: "c8-ch13-act2", title: "Ch 15 - Activity 15.2", description: "Maths activity for Ch 15", duration: "4:40", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766784/CLASS_8_CHAPTER_13_Activity_13.2_ywy6bl.mp4", thumbnail: thumbnailImage, chapter: "Chapter 15", activity: "Activity 15.2", chapterName: "Chapter 15" },
-      { id: "c8-ch13-act3", title: "Ch 15 - Activity 15.3", description: "Maths activity for Ch 15", duration: "5:01", url: "https://res.cloudinary.com/dv5z8id02/video/upload/v1769766756/CLASS_8_CHAPTER_13_Activity_13.3_blnana.mp4", thumbnail: thumbnailImage, chapter: "Chapter 15", activity: "Activity 15.3", chapterName: "Chapter 15" }
+      { id: "c8-ch13-act3", title: "Ch 15 - Activity 15.3", description: "Maths activity for Ch 15", duration: "5:01", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1772702508/Activity_15.3_cp_rzyydl.mp4", thumbnail: thumbnailImage, chapter: "Chapter 15", activity: "Activity 15.3", chapterName: "Chapter 15" }
     ]
   },
   {
-    id: "Prastuti-maths-9",
-    name: "Class 9",
-    icon: "Calculator",
-    description: "Mathematics activities and concepts for Class 9 students",
-    color: "from-emerald-500 to-teal-600",
-    section: "Prastuti",
-    topic: "Maths",
-    class: "Class 9",
-    totalVideos: 16,
-    videos: [
-      // Ch 2 (4 videos)
-      { id: "c9-ch2-act1", title: "Ch 2 - Activity 2.1", description: "Maths activity for Ch 2", duration: "05:02", url: "https://collection.cloudinary.com/dm8ozollp/ecfe35eebb51473a96203f795ff46a75", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.1", chapterName: "Chapter 2" },
-      { id: "c9-ch2-act2", title: "Ch 2 - Activity 2.2", description: "Maths activity for Ch 2", duration: "03:48", url: "https://collection.cloudinary.com/dm8ozollp/946916d4c35d3d3c493955c78eacb1ee", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.2", chapterName: "Chapter 2" },
-      { id: "c9-ch2-act3", title: "Ch 2 - Activity 2.3", description: "Maths activity for Ch 2", duration: "03:26", url: "https://collection.cloudinary.com/dm8ozollp/81b6e0ca754463e7b104779dea190d45", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.3", chapterName: "Chapter 2" },
-      { id: "c9-ch2-act4", title: "Ch 2 - Activity 2.4", description: "Maths activity for Ch 2", duration: "3:31", url: "https://collection.cloudinary.com/dm8ozollp/5e61c9930b3d61735e9c9a5fdca94cd2", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.4", chapterName: "Chapter 2" },
-      // Ch 3 (1 video)
-      { id: "c9-ch3-act1", title: "Ch 3 - Activity 3.1", description: "Maths activity for Ch 3", duration: "04:48", url: "https://collection.cloudinary.com/dm8ozollp/872909b926daddbc3037506a22349323", thumbnail: thumbnailImage, chapter: "Chapter 3", activity: "Activity 3.1", chapterName: "Chapter 3" },
-      // Ch 6 (1 video)
-      { id: "c9-ch6-act1", title: "Ch 6 - Activity 6.1", description: "Maths activity for Ch 6", duration: "01:44", url: "https://collection.cloudinary.com/dm8ozollp/fbd11232fc08fabcf1a6f218169a8b94", thumbnail: thumbnailImage, chapter: "Chapter 6", activity: "Activity 6.1", chapterName: "Chapter 6" },
-      // Ch 8 (1 video)
-      { id: "c9-ch8-act1", title: "Ch 8 - Activity 8.1", description: "Maths activity for Ch 8", duration: "01:17", url: "https://collection.cloudinary.com/dm8ozollp/21bb633566b2c0edb66f37546257f0d9", thumbnail: thumbnailImage, chapter: "Chapter 8", activity: "Activity 8.1", chapterName: "Chapter 8" },
-      // Ch 13 (6 videos)
-      { id: "c9-ch13-act1", title: "Ch 13 - Activity 13.1", description: "Maths activity for Ch 13", duration: "2:08", url: "https://collection.cloudinary.com/dm8ozollp/8185d9c3068478ca7a0157f1d2c02dc7", thumbnail: thumbnailImage, chapter: "Chapter 13", activity: "Activity 13.1", chapterName: "Chapter 13" },
-      { id: "c9-ch13-act2", title: "Ch 13 - Activity 13.2", description: "Maths activity for Ch 13", duration: "1:43", url: "https://collection.cloudinary.com/dm8ozollp/82c7397370db130c9740ef8b784a62c2", thumbnail: thumbnailImage, chapter: "Chapter 13", activity: "Activity 13.2", chapterName: "Chapter 13" },
-      { id: "c9-ch13-act3", title: "Ch 13 - Activity 13.3", description: "Maths activity for Ch 13", duration: "2:34", url: "https://collection.cloudinary.com/dm8ozollp/26dbf647f32e4d6e2ea7cb9ae6991178", thumbnail: thumbnailImage, chapter: "Chapter 13", activity: "Activity 13.3", chapterName: "Chapter 13" },
-      { id: "c9-ch13-act4", title: "Ch 13 - Activity 13.4", description: "Maths activity for Ch 13", duration: "3:05", url: "https://collection.cloudinary.com/dm8ozollp/7ad5edf6cb1ba8ad3e2b7308d4a5a243", thumbnail: thumbnailImage, chapter: "Chapter 13", activity: "Activity 13.4", chapterName: "Chapter 13" },
-      { id: "c9-ch13-act5", title: "Ch 13 - Activity 13.5", description: "Maths activity for Ch 13", duration: "2:27", url: "https://collection.cloudinary.com/dm8ozollp/4886b10a27556daa586165df4b204c1d", thumbnail: thumbnailImage, chapter: "Chapter 13", activity: "Activity 13.5", chapterName: "Chapter 13" },
-      { id: "c9-ch13-act6", title: "Ch 13 - Activity 13.6", description: "Maths activity for Ch 13", duration: "4:17", url: "https://collection.cloudinary.com/dm8ozollp/c0a87fc037ddd80ec204a331eb71441e", thumbnail: thumbnailImage, chapter: "Chapter 13", activity: "Activity 13.6", chapterName: "Chapter 13" },
-      // Ch 15 (3 videos)
-      { id: "c9-ch15-act1", title: "Ch 15 - Activity 15.1", description: "Maths activity for Ch 15", duration: "3:52", url: "https://collection.cloudinary.com/dm8ozollp/049e57821b52f0b8e2f7cdcd1fdb39a9", thumbnail: thumbnailImage, chapter: "Chapter 15", activity: "Activity 15.1", chapterName: "Chapter 15" },
-      { id: "c9-ch15-act2", title: "Ch 15 - Activity 15.2", description: "Maths activity for Ch 15", duration: "5:31", url: "https://collection.cloudinary.com/dm8ozollp/89ea7fdb98c9eb2f2694da2ca425f4da", thumbnail: thumbnailImage, chapter: "Chapter 15", activity: "Activity 15.2", chapterName: "Chapter 15" },
-      { id: "c9-ch15-act3", title: "Ch 15 - Activity 15.3", description: "Maths activity for Ch 15", duration: "4:03", url: "https://collection.cloudinary.com/dm8ozollp/af48d55490be3a14a3e74dfc0da94dc7", thumbnail: thumbnailImage, chapter: "Chapter 15", activity: "Activity 15.3", chapterName: "Chapter 15" }
-    ]
-  },
+  id: "Prastuti-maths-9",
+  name: "Class 9",
+  icon: "Calculator",
+  description: "Mathematics activities and concepts for Class 9 students",
+  color: "from-emerald-500 to-teal-600",
+  section: "Prastuti",
+  topic: "Maths",
+  class: "Class 9",
+  totalVideos: 16,
+  videos: [
+    // Ch 2 (4 videos)
+
+    { id: "c9-ch2-act1", title: "Ch 2 - Activity 2.1", description: "Maths activity for Ch 2", duration: "05:02", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772695513/Activity_2.1_cp_bpmsgd.mp4", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.1", chapterName: "Chapter 2" },
+    { id: "c9-ch2-act2", title: "Ch 2 - Activity 2.2", description: "Maths activity for Ch 2", duration: "03:48", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772699939/Activity_2.2_Cp_o3tvew.mp4", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.2", chapterName: "Chapter 2" },
+    { id: "c9-ch2-act3", title: "Ch 2 - Activity 2.3", description: "Maths activity for Ch 2", duration: "03:26", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772700268/Activity_2.3_cp_whuwjy.mp4", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.3", chapterName: "Chapter 2" },
+    { id: "c9-ch2-act4", title: "Ch 2 - Activity 2.4", description: "Maths activity for Ch 2", duration: "3:31", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772700633/Activity_2.4_cp_bs0zpp.mp4", thumbnail: thumbnailImage, chapter: "Chapter 2", activity: "Activity 2.4", chapterName: "Chapter 2" },
+
+    // Ch 3 (1 video)
+    { id: "c9-ch3-act1", title: "Ch 3 - Activity 3.1", description: "Maths activity for Ch 3", duration: "04:48", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772700823/Activity_3.1_cp_qvlr4n.mp4", thumbnail: thumbnailImage, chapter: "Chapter 3", activity: "Activity 3.1", chapterName: "Chapter 3" },
+
+    // Ch 6 (1 video)
+    { id: "c9-ch6-act1", title: "Ch 6 - Activity 6.1", description: "Maths activity for Ch 6", duration: "01:44", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772701066/Activity_6.1_cp_hvdfsm.mp4", thumbnail: thumbnailImage, chapter: "Chapter 6", activity: "Activity 6.1", chapterName: "Chapter 6" },
+
+    // Ch 8 (1 video)
+    { id: "c9-ch8-act1", title: "Ch 8 - Activity 8.1", description: "Maths activity for Ch 8", duration: "01:17", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772701166/Activity_8.1_bguxfr.mp4", thumbnail: thumbnailImage, chapter: "Chapter 8", activity: "Activity 8.1", chapterName: "Chapter 8" },
+
+    // Ch 13 (6 videos)
+    { id: "c9-ch13-act1", title: "Ch 13 - Activity 13.1", description: "Maths activity for Ch 13", duration: "2:08", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772701352/Activity_13.1_fu6xuo.mp4", thumbnail: thumbnailImage, chapter: "Chapter 13", activity: "Activity 13.1", chapterName: "Chapter 13" },
+    { id: "c9-ch13-act2", title: "Ch 13 - Activity 13.2", description: "Maths activity for Ch 13", duration: "1:43", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772701425/Activity_13.2_yuh3ja.mp4", thumbnail: thumbnailImage, chapter: "Chapter 13", activity: "Activity 13.2", chapterName: "Chapter 13" },
+    { id: "c9-ch13-act3", title: "Ch 13 - Activity 13.3", description: "Maths activity for Ch 13", duration: "2:34", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772701481/Activity_13.3_xl4xpy.mp4", thumbnail: thumbnailImage, chapter: "Chapter 13", activity: "Activity 13.3", chapterName: "Chapter 13" },
+    { id: "c9-ch13-act4", title: "Ch 13 - Activity 13.4", description: "Maths activity for Ch 13", duration: "3:05", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772701542/Activity_13.4_anzroy.mp4", thumbnail: thumbnailImage, chapter: "Chapter 13", activity: "Activity 13.4", chapterName: "Chapter 13" },
+    { id: "c9-ch13-act5", title: "Ch 13 - Activity 13.5", description: "Maths activity for Ch 13", duration: "2:27", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772701974/Activity_13.5_slgip8.mp4", thumbnail: thumbnailImage, chapter: "Chapter 13", activity: "Activity 13.5", chapterName: "Chapter 13" },
+    { id: "c9-ch13-act6", title: "Ch 13 - Activity 13.6", description: "Maths activity for Ch 13", duration: "4:17", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772702080/Activity_13.6_skoxtb.mp4", thumbnail: thumbnailImage, chapter: "Chapter 13", activity: "Activity 13.6", chapterName: "Chapter 13" },
+
+    // Ch 15 (3 videos)
+    { id: "c9-ch15-act1", title: "Ch 15 - Activity 15.1", description: "Maths activity for Ch 15", duration: "3:52", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772702264/Activity_15.1_osnqpv.mp4", thumbnail: thumbnailImage, chapter: "Chapter 15", activity: "Activity 15.1", chapterName: "Chapter 15" },
+    { id: "c9-ch15-act2", title: "Ch 15 - Activity 15.2", description: "Maths activity for Ch 15", duration: "5:31", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772702446/Activity_15.2_klwkfx.mp4", thumbnail: thumbnailImage, chapter: "Chapter 15", activity: "Activity 15.2", chapterName: "Chapter 15" },
+    { id: "c9-ch15-act3", title: "Ch 15 - Activity 15.3", description: "Maths activity for Ch 15", duration: "4:03", url: "https://res.cloudinary.com/dm8ozollp/video/upload/v1772702520/Activity_15.3_pcbgvd.mp4", thumbnail: thumbnailImage, chapter: "Chapter 15", activity: "Activity 15.3", chapterName: "Chapter 15" }
+  ]
+},
   {
     id: "Prastuti-maths-10",
     name: "Class 10",
