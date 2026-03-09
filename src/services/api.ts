@@ -107,7 +107,7 @@ export async function sendEmailOTP(email: string): Promise<{ otp?: string; error
 }
 
 // Notify admin via email that a new signup request is waiting for approval.
-// Fire-and-forget — failure is non-fatal and silently ignored.
+// Fire-and-forget — failure is non-fatal but errors ARE logged to console.
 async function notifyAdminOfSignupRequest(fullName: string, email: string, role: string) {
   const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID as string | undefined;
   const templateId = import.meta.env.VITE_EMAILJS_ADMIN_TEMPLATE_ID as string | undefined;
@@ -116,25 +116,28 @@ async function notifyAdminOfSignupRequest(fullName: string, email: string, role:
 
   const isPlaceholder = (v?: string) => !v || v.startsWith('your-') || v === '' || v === 'undefined';
   if (isPlaceholder(serviceId) || isPlaceholder(templateId) || isPlaceholder(publicKey) || isPlaceholder(adminEmail)) {
-    return; // Admin notification not configured — skip silently
+    console.warn('[AdminNotify] Skipped — one or more env vars are missing:', { serviceId, templateId, publicKey, adminEmail });
+    return;
   }
 
   try {
     const emailjs = await import('@emailjs/browser');
-    await emailjs.send(
+    const result = await emailjs.send(
       serviceId!,
       templateId!,
       {
         to_email: adminEmail,
-        user_name: fullName,
+        to_name: 'Admin',
+        user_name: fullName || 'Unknown',
         user_email: email,
         user_role: role,
         app_name: 'StudyHub',
       },
       publicKey!
     );
-  } catch {
-    // Non-fatal — ignore
+    console.log('[AdminNotify] Email sent successfully:', result.status, result.text);
+  } catch (err) {
+    console.error('[AdminNotify] Failed to send admin notification email:', err);
   }
 }
 
@@ -204,6 +207,7 @@ export async function signUp(payload: {
           status: 'pending',
           created_at: new Date().toISOString(),
         });
+        notifyAdminOfSignupRequest(payload.full_name || credential.user.displayName || '', payload.email, payload.role);
         await firebaseSignOut(auth);
         return {};
       } catch (innerErr: any) {
@@ -677,41 +681,41 @@ export async function initializeClassPasscodes(classNames: string[]): Promise<vo
 }
 
 // Send a password reset email via Firebase
-// export async function sendPasswordReset(email: string): Promise<{ error?: string }> {
-//   try {
-//     await sendPasswordResetEmail(auth, email.trim(), {
-//       url: `${window.location.origin}/reset-password?resetDone=true`,
-//     });
-//     return {};
-//   } catch (err: any) {
-//     let message = err?.message ?? String(err);
-//     if (err.code === 'auth/user-not-found') {
-//       message = 'No account found with this email address.';
-//     } else if (err.code === 'auth/invalid-email') {
-//       message = 'Invalid email address format.';
-//     } else if (err.code === 'auth/too-many-requests') {
-//       message = 'Too many requests. Please try again later.';
-//     }
-//     return { error: message };
-//   }
-// }
-
-
-export async function sendPasswordReset(email: string) {
+export async function sendPasswordReset(email: string): Promise<{ error?: string }> {
   try {
-    console.log("Sending reset email to:", email);
-
     await sendPasswordResetEmail(auth, email.trim(), {
       url: `${window.location.origin}/reset-password?resetDone=true`,
     });
-
-    console.log("Firebase accepted the reset request");
     return {};
   } catch (err: any) {
-    console.error("Reset email error:", err);
-    return { error: err.message };
+    let message = err?.message ?? String(err);
+    if (err.code === 'auth/user-not-found') {
+      message = 'No account found with this email address.';
+    } else if (err.code === 'auth/invalid-email') {
+      message = 'Invalid email address format.';
+    } else if (err.code === 'auth/too-many-requests') {
+      message = 'Too many requests. Please try again later.';
+    }
+    return { error: message };
   }
 }
+
+
+// export async function sendPasswordReset(email: string) {
+//   try {
+//     console.log("Sending reset email to:", email);
+
+//     await sendPasswordResetEmail(auth, email.trim(), {
+//       url: `${window.location.origin}/reset-password?resetDone=true`,
+//     });
+
+//     console.log("Firebase accepted the reset request");
+//     return {};
+//   } catch (err: any) {
+//     console.error("Reset email error:", err);
+//     return { error: err.message };
+//   }
+// }
 
 // Reset password using the oobCode from Firebase's password reset email link
 export async function resetPasswordWithCode(
