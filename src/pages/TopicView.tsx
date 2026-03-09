@@ -440,6 +440,19 @@ export default function TopicView() {
                   </div>
                 </div>
               </>
+            ) : chapterVideos.length > 0 ? (
+              <>
+                <div className="mb-4 sm:mb-6">
+                  <h2 className="text-xl sm:text-2xl font-bold">Select a Video</h2>
+                  <p className="text-sm sm:text-base text-muted-foreground">{selectedSubject.name} — {chapterVideos.length} videos</p>
+                </div>
+                <VideoList
+                  subject={{ ...selectedSubject, videos: chapterVideos }}
+                  selectedVideo={null}
+                  onSelectVideo={handleSelectVideo}
+                  getProgress={getProgress}
+                />
+              </>
             ) : (
               <div className="text-center py-8 sm:py-12 bg-muted/30 rounded-lg">
                 <BookOpen className="h-12 w-12 sm:h-16 sm:w-16 mx-auto text-muted-foreground mb-3 sm:mb-4" />
