@@ -249,7 +249,13 @@ export const subjects: Subject[] = [
     topic: "Class 8",
     class: "Anubhav Class 8",
     totalVideos: 5,
-    videos: []
+    videos: [
+      { id: "anubhav8-v1", title: "Music Generator", description: "Music Generator hands-on activity", duration: "2:49", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1773052494/Copy_of_Music_Generator_cp_i0hsxv.mp4", thumbnail: thumbnailImage, chapterName: "Music Generator" },
+      { id: "anubhav8-v2", title: "Solar Fan", description: "Solar Fan hands-on activity", duration: "2:18", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1773053332/Copy_Of_Solar_Fan_cp_vyhaan.mp4", thumbnail: thumbnailImage, chapterName: "Solar Fan" },
+      { id: "anubhav8-v3", title: "Vibrating Drawing Bot", description: "Vibrating Drawing Bot hands-on activity", duration: "2:41", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1773053365/Copy_Of_Vibrating_Drawing_Bot_cp_vxqr5d.mp4", thumbnail: thumbnailImage, chapterName: "Vibrating Drawing Bot" },
+      { id: "anubhav8-v4", title: "LDR Based Lamp", description: "LDR Based Lamp hands-on activity", duration: "3:19", url: "https://res.cloudinary.com/ds9xv9f9n/video/upload/v1773052781/Copy_Of_Ldr_Based_Lamp_cp_qc8jgr.mp4", thumbnail: thumbnailImage, chapterName: "LDR Based Lamp" },
+      { id: "anubhav8-v5", title: "Electric Motor", description: "Electric Motor hands-on activity", duration: "3:07", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1773041976/Copy_Of_Electric_Motor_hdzghf.mp4", thumbnail: thumbnailImage, chapterName: "Electric Motor" }
+    ]
   },
   {
     id: "anubhav-class9",
@@ -261,7 +267,12 @@ export const subjects: Subject[] = [
     topic: "Class 9",
     class: "Anubhav Class 9",
     totalVideos: 4,
-    videos: []
+    videos: [
+      { id: "anubhav9-v1", title: "Soil Moisture Detector", description: "Soil Moisture Detector hands-on activity", duration: "3:06", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1773042287/Copy_Of_Soil_Moisture_Detector_1_tqgelu.mp4", thumbnail: thumbnailImage, chapterName: "Soil Moisture Detector" },
+      { id: "anubhav9-v2", title: "Touch Detector Bell", description: "Touch Detector Bell hands-on activity", duration: "3:51", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1773042375/Copy_Of_Touch_Detector_Bell_1_mpciiv.mp4", thumbnail: thumbnailImage, chapterName: "Touch Detector Bell" },
+      { id: "anubhav9-v3", title: "Metal Detector", description: "Metal Detector hands-on activity", duration: "3:24", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1773066929/Copy_Of_Metal_Detector_1_cp_nrhkmm.mp4", thumbnail: thumbnailImage, chapterName: "Metal Detector" },
+      { id: "anubhav9-v4", title: "Remote Tester", description: "Remote Tester hands-on activity", duration: "2:56", url: "https://res.cloudinary.com/dbz3saipn/video/upload/v1773066948/Copy_Of_Remote_Tester_1_cp_y2cot3.mp4", thumbnail: thumbnailImage, chapterName: "Remote Tester" }
+    ]
   },
   {
     id: "anubhav-class10",
@@ -273,7 +284,12 @@ export const subjects: Subject[] = [
     topic: "Class 10",
     class: "Anubhav Class 10",
     totalVideos: 4,
-    videos: []
+    videos: [
+      { id: "anubhav10-v1", title: "Continuity Toy Tutorial", description: "Continuity Toy Tutorial hands-on activity", duration: "2:37", url: "https://res.cloudinary.com/ds9xv9f9n/video/upload/v1773070020/Copy_Of_Continuity_Toy_Tutorial_cp_hilgid.mp4", thumbnail: thumbnailImage, chapterName: "Continuity Toy Tutorial" },
+      { id: "anubhav10-v2", title: "Earthquake Detector", description: "Earthquake Detector hands-on activity", duration: "1:57", url: "https://res.cloudinary.com/ds9xv9f9n/video/upload/v1773070122/Copy_Of_Earthquake_Detector_cp_cchu1d.mp4", thumbnail: thumbnailImage, chapterName: "Earthquake Detector" },
+      { id: "anubhav10-v3", title: "Fleming's Motor", description: "Fleming's Motor hands-on activity", duration: "2:17", url: "https://res.cloudinary.com/ds9xv9f9n/video/upload/v1773070223/Copy_Of_Flemings_Motor_cp_ozokb0.mp4", thumbnail: thumbnailImage, chapterName: "Fleming's Motor" },
+      { id: "anubhav10-v4", title: "Bulbs In Series & Parallel", description: "Bulbs in Series and Parallel hands-on activity", duration: "3:53", url: "https://res.cloudinary.com/dlusrnr3o/video/upload/v1773042468/Copy_Of_Bulbs_In_Series_Parallel_pokrmh.mp4", thumbnail: thumbnailImage, chapterName: "Bulbs In Series & Parallel" }
+    ]
   },
 
   // ========== GEOMAGIC SECTION ==========

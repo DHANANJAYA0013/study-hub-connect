@@ -146,6 +146,23 @@ export default function TopicView() {
     }, 100);
   }, []);
 
+  // Auto-select subject when there is only one (e.g. Anubhav Class 8 has a single subject)
+  // For teachers/admins no passcode needed; for students wait until passcodes are loaded
+  const canAutoSelect = !loading && (role === "teacher" || role === "admin" || passcodesLoaded);
+  useEffect(() => {
+    if (!canAutoSelect) return;
+    if (selectedSubject) return; // already selected
+    if (topicSubjects.length !== 1) return; // only auto-select when exactly one subject
+    const subject = topicSubjects[0];
+    // Skip if passcode is required for students
+    const className = subject.class || "";
+    if (className && role !== "teacher" && role !== "admin") {
+      const storedPasscode = classPasscodes[className];
+      if (storedPasscode) return; // passcode required — let user click manually
+    }
+    proceedWithSubject(subject);
+  }, [canAutoSelect, topicSubjects, selectedSubject, role, classPasscodes, proceedWithSubject]);
+
   const handleSelectSubject = useCallback(async (subject: Subject) => {
     // Teachers and admins bypass the passcode entirely
     if (role === "teacher" || role === "admin") {
