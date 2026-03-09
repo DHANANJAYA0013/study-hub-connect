@@ -74,10 +74,10 @@ export function Header() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+                {/* <DropdownMenuItem onClick={() => navigate("/dashboard")}>
                   <BarChart className="mr-2 h-4 w-4" />
                   <span>My Dashboard</span>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 <DropdownMenuItem onClick={() => navigate("/downloads")}>
                   <Download className="mr-2 h-4 w-4" />
                   <span>My Downloads</span>

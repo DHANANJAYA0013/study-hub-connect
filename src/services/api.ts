@@ -5,6 +5,8 @@ import {
   onAuthStateChanged,
   updateProfile,
   sendPasswordResetEmail,
+  confirmPasswordReset,
+  verifyPasswordResetCode,
   updatePassword,
   reauthenticateWithCredential,
   EmailAuthProvider,
@@ -91,7 +93,6 @@ export async function sendEmailOTP(email: string): Promise<{ otp?: string; error
     const status = err?.status ?? err?.text ?? '';
     const detail = err?.message ?? String(err);
     console.error('EmailJS send failed:', err);
-    // Surface a human-readable reason when possible
     if (String(status) === '400' || String(detail).toLowerCase().includes('service')) {
       return { error: 'Invalid EmailJS Service ID. Check VITE_EMAILJS_SERVICE_ID in your .env file.' };
     }
@@ -105,9 +106,44 @@ export async function sendEmailOTP(email: string): Promise<{ otp?: string; error
   }
 }
 
+// Notify admin via email that a new signup request is waiting for approval.
+// Fire-and-forget — failure is non-fatal but errors ARE logged to console.
+async function notifyAdminOfSignupRequest(fullName: string, email: string, role: string) {
+  const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID as string | undefined;
+  const templateId = import.meta.env.VITE_EMAILJS_ADMIN_TEMPLATE_ID as string | undefined;
+  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string | undefined;
+  const adminEmail = import.meta.env.VITE_ADMIN_EMAIL as string | undefined;
+
+  const isPlaceholder = (v?: string) => !v || v.startsWith('your-') || v === '' || v === 'undefined';
+  if (isPlaceholder(serviceId) || isPlaceholder(templateId) || isPlaceholder(publicKey) || isPlaceholder(adminEmail)) {
+    console.warn('[AdminNotify] Skipped — one or more env vars are missing:', { serviceId, templateId, publicKey, adminEmail });
+    return;
+  }
+
+  try {
+    const emailjs = await import('@emailjs/browser');
+    const result = await emailjs.send(
+      serviceId!,
+      templateId!,
+      {
+        to_email: adminEmail,
+        to_name: 'Admin',
+        user_name: fullName || 'Unknown',
+        user_email: email,
+        user_role: role,
+        app_name: 'StudyHub',
+      },
+      publicKey!
+    );
+    console.log('[AdminNotify] Email sent successfully:', result.status, result.text);
+  } catch (err) {
+    console.error('[AdminNotify] Failed to send admin notification email:', err);
+  }
+}
+
 // Sign up new user (OTP already verified by the caller):
 // 1. Creates Firebase Auth account
-// 2. Writes signup_request to Firestore for admin approval
+// 2. Writes signup_request to Firestore for admin approval (in parallel with updateProfile)
 // 3. Signs the user out (they must wait for admin approval)
 export async function signUp(payload: { 
   email: string; 
@@ -122,39 +158,45 @@ export async function signUp(payload: {
       payload.password
     );
 
-    if (payload.full_name) {
-      await updateProfile(userCredential.user, { displayName: payload.full_name });
-    }
-
     const requestId = `${Date.now()}_${payload.email.replace(/[^a-zA-Z0-9]/g, '_')}`;
-    await setDoc(doc(db, 'signup_requests', requestId), {
-      uid: userCredential.user.uid,
-      email: payload.email,
-      full_name: payload.full_name || '',
-      role: payload.role,
-      status: 'pending',
-      created_at: new Date().toISOString(),
-    });
+
+    // Run updateProfile and Firestore write in parallel — neither depends on the other
+    await Promise.all([
+      payload.full_name
+        ? updateProfile(userCredential.user, { displayName: payload.full_name })
+        : Promise.resolve(),
+      setDoc(doc(db, 'signup_requests', requestId), {
+        uid: userCredential.user.uid,
+        email: payload.email,
+        full_name: payload.full_name || '',
+        role: payload.role,
+        status: 'pending',
+        created_at: new Date().toISOString(),
+      }),
+    ]);
 
     // Sign out immediately — user must wait for admin approval
+    // Notify admin in the background (fire-and-forget)
+    notifyAdminOfSignupRequest(payload.full_name || '', payload.email, payload.role);
     await firebaseSignOut(auth);
     return {};
   } catch (err: any) {
     if (err.code === 'auth/email-already-in-use') {
-      // Check Firestore to give the most helpful message
+      // Check Firestore queries in parallel to give the most helpful message
       try {
+        const [usersSnap, reqSnap] = await Promise.all([
+          getDocs(query(collection(db, 'users'), where('email', '==', payload.email))),
+          getDocs(query(collection(db, 'signup_requests'), where('email', '==', payload.email))),
+        ]);
         // 1. Already an approved user?
-        const usersSnap = await getDocs(query(collection(db, 'users'), where('email', '==', payload.email)));
         if (!usersSnap.empty) {
           return { error: 'An account with this email already exists. Please go to Sign In.' };
         }
         // 2. Already a pending request?
-        const reqSnap = await getDocs(query(collection(db, 'signup_requests'), where('email', '==', payload.email)));
         if (!reqSnap.empty) {
           return { error: 'A signup request for this email is already pending admin approval. Please wait for the admin to approve your account.' };
         }
-        // 3. Firebase Auth account exists but no Firestore data — reuse the existing account
-        //    by signing in and writing the signup request.
+        // 3. Firebase Auth account exists but no Firestore data — reuse it
         const credential = await signInWithEmailAndPassword(auth, payload.email, payload.password);
         const requestId = `${Date.now()}_${payload.email.replace(/[^a-zA-Z0-9]/g, '_')}`;
         await setDoc(doc(db, 'signup_requests', requestId), {
@@ -165,6 +207,7 @@ export async function signUp(payload: {
           status: 'pending',
           created_at: new Date().toISOString(),
         });
+        notifyAdminOfSignupRequest(payload.full_name || credential.user.displayName || '', payload.email, payload.role);
         await firebaseSignOut(auth);
         return {};
       } catch (innerErr: any) {
@@ -640,7 +683,9 @@ export async function initializeClassPasscodes(classNames: string[]): Promise<vo
 // Send a password reset email via Firebase
 export async function sendPasswordReset(email: string): Promise<{ error?: string }> {
   try {
-    await sendPasswordResetEmail(auth, email.trim());
+    await sendPasswordResetEmail(auth, email.trim(), {
+      url: `${window.location.origin}/reset-password?resetDone=true`,
+    });
     return {};
   } catch (err: any) {
     let message = err?.message ?? String(err);
@@ -650,6 +695,47 @@ export async function sendPasswordReset(email: string): Promise<{ error?: string
       message = 'Invalid email address format.';
     } else if (err.code === 'auth/too-many-requests') {
       message = 'Too many requests. Please try again later.';
+    }
+    return { error: message };
+  }
+}
+
+
+// export async function sendPasswordReset(email: string) {
+//   try {
+//     console.log("Sending reset email to:", email);
+
+//     await sendPasswordResetEmail(auth, email.trim(), {
+//       url: `${window.location.origin}/reset-password?resetDone=true`,
+//     });
+
+//     console.log("Firebase accepted the reset request");
+//     return {};
+//   } catch (err: any) {
+//     console.error("Reset email error:", err);
+//     return { error: err.message };
+//   }
+// }
+
+// Reset password using the oobCode from Firebase's password reset email link
+export async function resetPasswordWithCode(
+  oobCode: string,
+  newPassword: string
+): Promise<{ error?: string }> {
+  try {
+    await verifyPasswordResetCode(auth, oobCode);
+    await confirmPasswordReset(auth, oobCode, newPassword);
+    return {};
+  } catch (err: any) {
+    let message = err?.message ?? String(err);
+    if (err.code === 'auth/expired-action-code') {
+      message = 'This reset link has expired. Please request a new one.';
+    } else if (err.code === 'auth/invalid-action-code') {
+      message = 'This reset link is invalid or has already been used.';
+    } else if (err.code === 'auth/weak-password') {
+      message = 'Password is too weak. Please use at least 6 characters.';
+    } else if (err.code === 'auth/user-not-found' || err.code === 'auth/user-disabled') {
+      message = 'This account no longer exists or has been disabled.';
     }
     return { error: message };
   }
@@ -709,6 +795,7 @@ export default {
   removeClassPasscode,
   initializeClassPasscodes,
   sendPasswordReset,
+  resetPasswordWithCode,
   changePassword,
   sendEmailOTP,
 };
