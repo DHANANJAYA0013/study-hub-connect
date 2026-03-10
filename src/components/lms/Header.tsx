@@ -43,7 +43,7 @@ export function Header() {
             <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
           </div>
           <div className="flex flex-col">
-            <span className="text-base sm:text-lg font-bold tracking-tight">StudyHub</span>
+            <span className="text-base sm:text-lg font-bold tracking-tight" onClick={() => navigate("/")}>StudyHub</span>
             <span className="hidden sm:block text-xs text-muted-foreground">Learning Management System</span>
           </div>
         </div>

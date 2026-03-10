@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Video } from "@/data/subjects";
+
+import { Link } from "react-router-dom";
 import {
   Download,
   Trash2,
@@ -127,7 +129,7 @@ export default function MyDownloads() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <Header />
-      
+
       <div className="container mx-auto px-4 py-4 sm:py-6 md:py-8">
         {selectedVideo && (
           <div className="mb-6 sm:mb-8">
@@ -153,6 +155,11 @@ export default function MyDownloads() {
             <div className="mb-6 sm:mb-8">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
                 <div>
+                  <Link to="/"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+                  </Link> <br />
                   <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                     My Downloads
                   </h1>
@@ -320,8 +327,8 @@ export default function MyDownloads() {
                                 {video.status === "downloading"
                                   ? "Downloading..."
                                   : video.status === "failed"
-                                  ? "Download failed"
-                                  : "Download incomplete"}
+                                    ? "Download failed"
+                                    : "Download incomplete"}
                               </span>
                               <span className="font-medium">{video.progress.toFixed(0)}%</span>
                             </div>
