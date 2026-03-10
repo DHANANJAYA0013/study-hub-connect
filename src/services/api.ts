@@ -127,7 +127,9 @@ async function notifyAdminOfSignupRequest(fullName: string, email: string, role:
       templateId!,
       {
         to_email: adminEmail,
-        to_name: 'Admin',
+        name: 'Admin',
+        email: email,
+        title: 'New Signup Request',
         user_name: fullName || 'Unknown',
         user_email: email,
         user_role: role,

@@ -1,4 +1,5 @@
-import { GraduationCap, LogOut, User, Download, BarChart, KeyRound } from "lucide-react";
+import { GraduationCap, LogOut, User, Download, BarChart, KeyRound, Lock } from "lucide-react";
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -12,10 +13,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ClassPasscodeManager } from "@/components/lms/ClassPasscodeManager";
 
 export function Header() {
   const { user, role, signOut } = useAuth();
   const navigate = useNavigate();
+  const [passcodeDialogOpen, setPasscodeDialogOpen] = useState(false);
 
   const getInitials = (email: string) => {
     return email.substring(0, 2).toUpperCase();
@@ -26,6 +35,7 @@ export function Header() {
   };
 
   return (
+    <>
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-card/80 backdrop-blur-xl">
       <div className="container flex h-14 sm:h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2 sm:gap-3">
@@ -86,6 +96,12 @@ export function Header() {
                   <KeyRound className="mr-2 h-4 w-4" />
                   <span>Change Password</span>
                 </DropdownMenuItem>
+                {(role === "teacher" || role === "admin") && (
+                  <DropdownMenuItem onClick={() => setPasscodeDialogOpen(true)}>
+                    <Lock className="mr-2 h-4 w-4" />
+                    <span>Class Passcode Manager</span>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={signOut} className="text-destructive focus:text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
@@ -97,5 +113,15 @@ export function Header() {
         )}
       </div>
     </header>
+
+    <Dialog open={passcodeDialogOpen} onOpenChange={setPasscodeDialogOpen}>
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Class Passcode Manager</DialogTitle>
+        </DialogHeader>
+        <ClassPasscodeManager />
+      </DialogContent>
+    </Dialog>
+  </>
   );
 }
