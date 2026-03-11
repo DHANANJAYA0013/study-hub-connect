@@ -274,16 +274,31 @@ export default function Signup() {
               )}
             </div>
 
-            {/* Email + Send Code Button */}
+            {/* Email */}
             <div>
               <Label>Email</Label>
+              <Input
+                autoComplete="off"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={otpSent}
+              />
+              {errors.email && (
+                <p className="text-xs text-destructive mt-1">{errors.email}</p>
+              )}
+            </div>
+
+            {/* Password + Send Code Button */}
+            <div>
+              <Label>Password</Label>
               <div className="flex gap-2">
                 <Input
-                  autoComplete="off"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  type="password"
+                  placeholder="Create a password (min. 6 characters)"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   disabled={otpSent}
                   className="flex-1"
                 />
@@ -310,21 +325,6 @@ export default function Signup() {
                   )}
                 </Button>
               </div>
-              {errors.email && (
-                <p className="text-xs text-destructive mt-1">{errors.email}</p>
-              )}
-            </div>
-
-            {/* Password */}
-            <div>
-              <Label>Password</Label>
-              <Input
-                type="password"
-                placeholder="Create a password (min. 6 characters)"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={otpSent}
-              />
               {errors.password && (
                 <p className="text-xs text-destructive mt-1">{errors.password}</p>
               )}

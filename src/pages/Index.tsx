@@ -6,7 +6,7 @@ import { Header } from "@/components/lms/Header";
 import { CategoryGrid } from "@/components/lms/CategoryGrid";
 import { VideoStats } from "@/components/lms/VideoComponents";
 import { subjects, Subject, Video } from "@/data/subjects";
-import { Loader2, BookOpen, Microscope, Code, TrendingUp, Award, Users, GraduationCap, ArrowRight } from "lucide-react";
+import { Loader2, BookOpen, Microscope, Code, TrendingUp, Award, Users, GraduationCap, ArrowRight, Lightbulb } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -139,10 +139,10 @@ export default function Index() {
         color: "bg-green-500/10 text-green-500"
       },
       {
-        icon: Award,
-        title: "Earn Certificates",
-        description: "Get recognized for your achievements with course completion certificates",
-        color: "bg-orange-500/10 text-orange-500"
+        icon: Lightbulb,
+        title: "Concept Clarity",
+        description: "Simplified explanations and experiments help students understand difficult concepts easily",
+        color: "bg-amber-500/10 text-amber-500"
       }
     ];
 
@@ -232,11 +232,11 @@ export default function Index() {
         <section className="container px-4 py-12 sm:py-16 md:py-20">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
             <div>
-              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-1 sm:mb-2">50+</div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-1 sm:mb-2">10+</div>
               <div className="text-sm sm:text-base text-muted-foreground">Subjects</div>
             </div>
             <div>
-              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-1 sm:mb-2">500+</div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-1 sm:mb-2">200+</div>
               <div className="text-sm sm:text-base text-muted-foreground">Video Lessons</div>
             </div>
             <div>
